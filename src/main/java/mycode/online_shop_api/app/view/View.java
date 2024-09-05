@@ -1,10 +1,26 @@
 package mycode.online_shop_api.app.view;
 
-import mycode.online_shop_api.app.model.Customer;
-import mycode.online_shop_api.app.model.Order;
-import mycode.online_shop_api.app.model.OrderDetails;
-import mycode.online_shop_api.app.model.Product;
-import mycode.online_shop_api.app.repository.*;
+import mycode.online_shop_api.app.Categories.repository.CategoryRepository;
+import mycode.online_shop_api.app.Customers.dtos.CreateCustomerRequest;
+import mycode.online_shop_api.app.Customers.model.Customer;
+import mycode.online_shop_api.app.Customers.repository.CustomerRepository;
+import mycode.online_shop_api.app.Customers.service.CustomerCommandService;
+import mycode.online_shop_api.app.Customers.service.CustomerQueryService;
+import mycode.online_shop_api.app.OrderDetails.dtos.CreateOrderDetailsRequest;
+import mycode.online_shop_api.app.OrderDetails.repository.OrderDetailsRepository;
+import mycode.online_shop_api.app.OrderDetails.service.OrderDetailsCommandService;
+import mycode.online_shop_api.app.OrderDetails.service.OrderDetailsQueryService;
+import mycode.online_shop_api.app.Orders.dtos.CreateOrderRequest;
+import mycode.online_shop_api.app.Orders.model.Order;
+import mycode.online_shop_api.app.Orders.repository.OrderRepository;
+import mycode.online_shop_api.app.OrderDetails.model.OrderDetails;
+import mycode.online_shop_api.app.Orders.service.OrderCommandService;
+import mycode.online_shop_api.app.Orders.service.OrderQueryService;
+import mycode.online_shop_api.app.ProductCategories.repository.ProductCategoriesRepository;
+import mycode.online_shop_api.app.Products.repository.ProductRepository;
+import mycode.online_shop_api.app.Products.model.Product;
+import mycode.online_shop_api.app.Products.service.ProductCommandService;
+import mycode.online_shop_api.app.Products.service.ProductQueryService;
 import mycode.online_shop_api.app.utile.Cart;
 import mycode.online_shop_api.app.utile.ProductDto;
 import org.springframework.stereotype.Component;
@@ -15,23 +31,29 @@ import java.util.*;
 @Component
 public class View {
 
-    private CategoryRepository categoryRepository;
-    private CustomerRepository customerRepository;
-    private OrderRepository orderRepository;
+    private CustomerCommandService customerCommandService;
+    private CustomerQueryService customerQueryService;
+    private ProductQueryService productQueryService;
     private OrderDetailsRepository orderDetailsRepository;
-    private ProductCategoriesRepository productCategoriesRepository;
     private ProductRepository productRepository;
+    private OrderCommandService orderCommandService;
+    private OrderQueryService orderQueryService;
+    private OrderDetailsCommandService orderDetailsCommandService;
+    private OrderDetailsQueryService orderDetailsQueryService;
     private Scanner scanner;
     private Customer customer;
     private Cart cart;
 
-    public View(CategoryRepository categoryRepository, CustomerRepository customerRepository, OrderRepository orderRepository, OrderDetailsRepository orderDetailsRepository, ProductCategoriesRepository productCategoriesRepository, ProductRepository productRepository) {
-        this.categoryRepository = categoryRepository;
-        this.customerRepository = customerRepository;
-        this.orderRepository = orderRepository;
+    public View( OrderDetailsRepository orderDetailsRepository, ProductRepository productRepository, CustomerCommandService customerCommandService, CustomerQueryService customerQueryService, ProductQueryService productQueryService, OrderCommandService orderCommandService, OrderQueryService orderQueryService, OrderDetailsQueryService orderDetailsQueryService, OrderDetailsCommandService orderDetailsCommandService) {
         this.orderDetailsRepository = orderDetailsRepository;
-        this.productCategoriesRepository = productCategoriesRepository;
         this.productRepository = productRepository;
+        this.customerCommandService = customerCommandService;
+        this.customerQueryService = customerQueryService;
+        this.productQueryService = productQueryService;
+        this.orderCommandService = orderCommandService;
+        this.orderQueryService = orderQueryService;
+        this.orderDetailsCommandService = orderDetailsCommandService;
+        this.orderDetailsQueryService = orderDetailsQueryService;
 
         this.scanner = new Scanner(System.in);
         playLogin();
@@ -93,13 +115,13 @@ public class View {
 
             switch (alegere) {
                 case 1:
-                    showProducts();
+                    productQueryService.showProducts();
                     break;
                 case 2:
-                    sortedASC();
+                    productQueryService.showProductsSortedASC();
                     break;
                 case 3:
-                    sortedDESC();
+                    productQueryService.showProductsSortedDESC();
                     break;
                 case 4:
                     addToCart();
@@ -130,15 +152,9 @@ public class View {
         System.out.println("Password: ");
         String password = scanner.nextLine();
 
-        Optional<Customer> customer = customerRepository.findByEmailAndPassword(email,password);
-
-        if(customer.isPresent()){
-            this.customer = customer.get();
-            this.cart = new Cart(this.customer.getId(), null);
-            clientPlay();
-        }else {
-            System.out.println("Login failed");
-        }
+        this.customer = customerQueryService.findByEmailAndPassword(email,password);
+        this.cart = new Cart(this.customer.getId(), null);
+        clientPlay();
 
     }
 
@@ -156,17 +172,8 @@ public class View {
         System.out.println("Country: ");
         String country = scanner.nextLine();
 
-        String email;
-        while (true) {
-            System.out.println("Email: ");
-            email = scanner.nextLine();
-
-            if (customerRepository.existsByEmail(email)) {
-                System.out.println("This email is already in use");
-            } else {
-                break;
-            }
-        }
+        System.out.println("Email:");
+        String email= scanner.nextLine();
 
         System.out.println("Password: ");
         String password = scanner.nextLine();
@@ -174,42 +181,11 @@ public class View {
         System.out.println("Phone: ");
         String phone = scanner.nextLine();
 
-        Customer customer = Customer.builder()
-                .fullName(fullName)
-                .billingAddress(billingAddress)
-                .shippingAddress(shippingAddress)
-                .country(country)
-                .email(email)
-                .password(password)
-                .phone(phone)
-                .build();
 
-        customerRepository.saveAndFlush(customer);
+        CreateCustomerRequest createCustomerRequest= new CreateCustomerRequest(fullName, email, password, billingAddress, shippingAddress, phone, country);
 
+        customerCommandService.addCustomer(createCustomerRequest);
 
-    }
-
-    private void showProducts(){
-
-        List<Product> list = productRepository.findAll();
-
-        list.forEach(System.out::println);
-
-    }
-
-    private void sortedASC(){
-
-        Optional<List<Product>> list = productRepository.sortedAsc();
-
-        list.get().forEach(System.out::println);
-
-    }
-
-    private void sortedDESC(){
-
-        Optional<List<Product>> list = productRepository.sortedDesc();
-
-        list.get().forEach(System.out::println);
 
     }
 
@@ -221,16 +197,13 @@ public class View {
         while(running){
             System.out.println("Enter the products name: ");
             String nume = scanner.nextLine();
-            Optional<Product> product = productRepository.findByName(nume);
+            Product product = productQueryService.findByName(nume);
 
-            if(product.isPresent()){
-                System.out.println("Quantity: ");
-                int q = Integer.parseInt(scanner.nextLine());
-                ProductDto productDto = new ProductDto(product.get().getName(),q, product.get().getPrice());
-                list.add(productDto);
-            }else{
-                System.out.println("Product not found");
-            }
+
+            System.out.println("Quantity: ");
+            int q = Integer.parseInt(scanner.nextLine());
+            ProductDto productDto = new ProductDto(product.getName(),q, product.getPrice());
+            list.add(productDto);
 
             System.out.println("Would you like to add something else to the cart? (y/n)");
             String choice = scanner.nextLine();
@@ -249,11 +222,11 @@ public class View {
 
             System.out.println("Enter product name: ");
             String nume = scanner.nextLine();
-            Optional<Product> product = productRepository.findByName(nume);
+            Product product = productQueryService.findByName(nume);
 
 
             for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).getName().equals(product.get().getName())) {
+                if (list.get(i).getName().equals(product.getName())) {
                     list.remove(list.get(i));
                     found = true;
                     System.out.println("Product deleted");
@@ -298,14 +271,12 @@ public class View {
             System.out.println("Send order? (y/n)");
             String choice = scanner.nextLine();
             if(choice.equals("y")){
-                Order order = Order.builder().orderAddress(customer.getShippingAddress()).orderDate(LocalDate.now()).orderEmail(customer.getEmail()).orderStatus("Preparing").amount(amount).shippingAddress(customer.getShippingAddress()).customer(customer).build();
-                orderRepository.saveAndFlush(order);
+                CreateOrderRequest createOrderRequest = new CreateOrderRequest(customer.getEmail(), customer.getBillingAddress(), customer.getShippingAddress(), LocalDate.now(), amount, "Preparing",customer);
+                orderCommandService.addOrder(createOrderRequest, list);
 
                 for (ProductDto productDto : list) {
-                    OrderDetails orderDetails =OrderDetails.builder().order(order).product(productRepository.findByName(productDto.getName()).get()).price(productDto.getPrice()).quantity(productDto.getCantitate()).build();
-                    orderDetailsRepository.saveAndFlush(orderDetails);
-                    Product product = orderDetails.getProduct();
-                    product.setStock(product.getStock()-orderDetails.getQuantity());
+                    Product product = productQueryService.findByName(productDto.getName());
+                    product.setStock(product.getStock()-productDto.getCantitate());
                 }
             }
         }

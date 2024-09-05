@@ -1,9 +1,26 @@
 package mycode.online_shop_api;
 
-import mycode.online_shop_api.app.model.Category;
-import mycode.online_shop_api.app.model.Customer;
-import mycode.online_shop_api.app.model.Product;
-import mycode.online_shop_api.app.repository.*;
+import mycode.online_shop_api.app.Categories.repository.CategoryRepository;
+import mycode.online_shop_api.app.Customers.dtos.CreateCustomerRequest;
+import mycode.online_shop_api.app.Customers.model.Customer;
+import mycode.online_shop_api.app.Customers.repository.CustomerRepository;
+import mycode.online_shop_api.app.Categories.model.Category;
+import mycode.online_shop_api.app.Customers.service.CustomerCommandService;
+import mycode.online_shop_api.app.Customers.service.CustomerCommandServiceImpl;
+import mycode.online_shop_api.app.Customers.service.CustomerQueryService;
+import mycode.online_shop_api.app.OrderDetails.dtos.CreateOrderDetailsRequest;
+import mycode.online_shop_api.app.OrderDetails.model.OrderDetails;
+import mycode.online_shop_api.app.OrderDetails.repository.OrderDetailsRepository;
+import mycode.online_shop_api.app.OrderDetails.service.OrderDetailsCommandService;
+import mycode.online_shop_api.app.Orders.dtos.CreateOrderRequest;
+import mycode.online_shop_api.app.Orders.model.Order;
+import mycode.online_shop_api.app.Orders.repository.OrderRepository;
+import mycode.online_shop_api.app.Orders.service.OrderCommandService;
+import mycode.online_shop_api.app.ProductCategories.repository.ProductCategoriesRepository;
+import mycode.online_shop_api.app.Products.model.Product;
+import mycode.online_shop_api.app.Products.repository.ProductRepository;
+import mycode.online_shop_api.app.Products.service.ProductQueryService;
+import mycode.online_shop_api.app.utile.ProductDto;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,40 +36,26 @@ public class OnlineShopApiApplication {
     }
 
     @Bean
-    CommandLineRunner commandLineRunner(CategoryRepository categoryRepository, CustomerRepository customerRepository, OrderDetailsRepository orderDetailsRepository, OrderRepository orderRepository, ProductCategoriesRepository productCategoriesRepository, ProductRepository productRepository){
-
+    CommandLineRunner commandLineRunner(OrderRepository orderRepository, OrderCommandService orderCommandService, CustomerQueryService customerQueryService, ProductQueryService productQueryService, OrderDetailsCommandService orderDetailsCommandService, OrderDetailsRepository orderDetailsRepository){
 
         return args -> {
 
-            Category homeAppliancesCategory = Category.builder()
-                    .name("Home Appliances")
-                    .build();
+            Customer customer = customerQueryService.findByEmailAndPassword("lala@email.com", "pw123");
+            Product product = productQueryService.findByName("Iphone 15");
 
-            categoryRepository.saveAndFlush(homeAppliancesCategory);
+            Order order = Order.builder().customer(customer).amount(0).orderStatus(" ").orderEmail(customer.getEmail()).orderDate(LocalDate.now()).orderAddress(customer.getBillingAddress()).shippingAddress(customer.getShippingAddress()).build();
 
-            Category furnitureCategory = Category.builder()
-                    .name("Furniture")
-                    .build();
+            orderRepository.saveAndFlush(order);
 
-            categoryRepository.saveAndFlush(furnitureCategory);
+            OrderDetails orderDetails= OrderDetails.builder().quantity(0).product(product).price(product.getPrice()).order(order).build();
 
-            Category booksCategory = Category.builder()
-                    .name("Books")
-                    .build();
+            orderDetailsRepository.saveAndFlush(orderDetails);
 
-            categoryRepository.saveAndFlush(booksCategory);
 
-            Category toysCategory = Category.builder()
-                    .name("Toys")
-                    .build();
 
-            categoryRepository.saveAndFlush(toysCategory);
 
-            Category sportingGoodsCategory = Category.builder()
-                    .name("Sporting Goods")
-                    .build();
 
-            categoryRepository.saveAndFlush(sportingGoodsCategory);
+
 
         };
     }

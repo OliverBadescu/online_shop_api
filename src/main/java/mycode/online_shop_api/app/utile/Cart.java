@@ -2,6 +2,7 @@ package mycode.online_shop_api.app.utile;
 
 import lombok.Getter;
 import lombok.Setter;
+import mycode.online_shop_api.app.Products.dto.ProductDto;
 
 import java.util.ArrayList;
 

@@ -1,6 +1,7 @@
 package mycode.online_shop_api.app.Products.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import mycode.online_shop_api.app.OrderDetails.model.OrderDetails;
 import mycode.online_shop_api.app.ProductCategories.model.ProductCategories;
@@ -9,6 +10,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+import jakarta.validation.constraints.*;
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @AllArgsConstructor
@@ -36,6 +38,8 @@ public class Product {
     @Column(name = "id")
     private int id;
 
+
+    @NotBlank(message = "Product name cannot be empty")
     @Column(
             name = "name",
             nullable = false,
@@ -43,6 +47,9 @@ public class Product {
     )
     private String name;
 
+
+    @NotNull(message = "Price is required")
+    @Positive(message = "Price must be a positive number")
     @Column(
             name = "price",
             nullable = false,
@@ -50,6 +57,9 @@ public class Product {
     )
     private Double price;
 
+
+    @NotNull(message = "Weight is required")
+    @Positive(message = "Weight must be a positive number")
     @Column(
             name = "weight",
             nullable = false,
@@ -57,6 +67,8 @@ public class Product {
     )
     private Double weight;
 
+
+    @NotBlank(message = "Descriptions cannot be empty")
     @Column(
             name = "descriptions",
             nullable = false,
@@ -64,6 +76,7 @@ public class Product {
     )
     private String descriptions;
 
+    @NotBlank(message = "Category cannot be empty")
     @Column(
             name = "category",
             nullable = false,
@@ -72,6 +85,8 @@ public class Product {
 
     private String category;
 
+
+    @NotNull(message = "Create date is required")
     @Column(
             name = "create_date",
             nullable = false,
@@ -79,6 +94,7 @@ public class Product {
     )
     private LocalDate createDate;
 
+    @Min(value = 0, message = "Stock must be at least 0")
     @Column(
             name = "stock",
             nullable = false,

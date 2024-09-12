@@ -9,13 +9,13 @@ import org.mapstruct.factory.Mappers;
 @Mapper
 public interface OrderMapper {
 
-//    OrderMapper INSTANCE = Mappers.getMapper(OrderMapper.class);
-//
-//    @Mapping(target = "id", ignore = true)
-//    @Mapping(target = "orderDetails", ignore = true)
-//    @Mapping(target= "customer", ignore = true)
-//    Order toOrder(CreateOrderRequest dto);
-//
-//    CreateOrderRequest toDto(Order order);
+    OrderMapper INSTANCE = Mappers.getMapper(OrderMapper.class);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "orderDetails", ignore = true)
+    @Mapping(target= "customer", ignore = true)
+    Order toOrder(CreateOrderRequest dto);
+
+    CreateOrderRequest toDto(Order order);
 
 }

@@ -7,4 +7,6 @@ public class Constants {
     public static String NO_USER_FOUND = "No user with this email and password has been found";
 
     public static String NO_PRODUCT_FOUND = "No product with this name has been found";
+
+    public static String PRODUCT_PRICE_NEGATIVE = "Prodcut price can't be negative";
 }

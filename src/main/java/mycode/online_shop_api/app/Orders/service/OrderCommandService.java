@@ -1,7 +1,7 @@
 package mycode.online_shop_api.app.Orders.service;
 
 import mycode.online_shop_api.app.Orders.dtos.CreateOrderRequest;
-import mycode.online_shop_api.app.utile.ProductDto;
+import mycode.online_shop_api.app.Products.dto.ProductDto;
 
 import java.util.ArrayList;
 

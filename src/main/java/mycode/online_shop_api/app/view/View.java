@@ -1,28 +1,21 @@
 package mycode.online_shop_api.app.view;
 
-import mycode.online_shop_api.app.Categories.repository.CategoryRepository;
 import mycode.online_shop_api.app.Customers.dtos.CreateCustomerRequest;
 import mycode.online_shop_api.app.Customers.model.Customer;
-import mycode.online_shop_api.app.Customers.repository.CustomerRepository;
 import mycode.online_shop_api.app.Customers.service.CustomerCommandService;
 import mycode.online_shop_api.app.Customers.service.CustomerQueryService;
-import mycode.online_shop_api.app.OrderDetails.dtos.CreateOrderDetailsRequest;
 import mycode.online_shop_api.app.OrderDetails.repository.OrderDetailsRepository;
 import mycode.online_shop_api.app.OrderDetails.service.OrderDetailsCommandService;
 import mycode.online_shop_api.app.OrderDetails.service.OrderDetailsQueryService;
 import mycode.online_shop_api.app.Orders.dtos.CreateOrderRequest;
 import mycode.online_shop_api.app.Orders.model.Order;
-import mycode.online_shop_api.app.Orders.repository.OrderRepository;
-import mycode.online_shop_api.app.OrderDetails.model.OrderDetails;
 import mycode.online_shop_api.app.Orders.service.OrderCommandService;
 import mycode.online_shop_api.app.Orders.service.OrderQueryService;
-import mycode.online_shop_api.app.ProductCategories.repository.ProductCategoriesRepository;
 import mycode.online_shop_api.app.Products.repository.ProductRepository;
 import mycode.online_shop_api.app.Products.model.Product;
-import mycode.online_shop_api.app.Products.service.ProductCommandService;
 import mycode.online_shop_api.app.Products.service.ProductQueryService;
 import mycode.online_shop_api.app.utile.Cart;
-import mycode.online_shop_api.app.utile.ProductDto;
+import mycode.online_shop_api.app.Products.dto.ProductDto;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;

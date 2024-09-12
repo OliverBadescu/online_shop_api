@@ -2,6 +2,7 @@ package mycode.online_shop_api.app.Categories.model;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import mycode.online_shop_api.app.ProductCategories.model.ProductCategories;
 
@@ -38,6 +39,7 @@ public class Category {
     )
     private int id;
 
+    @NotBlank(message = "Category cannot be empty")
     @Column(
             name = "name",
             nullable = false,

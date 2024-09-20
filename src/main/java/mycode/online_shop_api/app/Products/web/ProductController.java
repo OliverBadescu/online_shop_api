@@ -54,7 +54,7 @@ public class ProductController {
     @PatchMapping(path ="/{productId}")
     public ResponseEntity<CreateProductResponse> updateProductPatch(@PathVariable int productId, @Valid @RequestBody UpdateProductRequest updateProductRequest){
 
-
+        productCommandService.updateProductPatch(productId,updateProductRequest);
         CreateProductResponse createProductResponse = productQueryService.findById(productId);
         return new ResponseEntity<>(createProductResponse, HttpStatus.ACCEPTED);
 

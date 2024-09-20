@@ -1,5 +1,6 @@
 package mycode.online_shop_api.app.Products.service;
 
+import mycode.online_shop_api.app.Products.dto.CreateProductResponse;
 import mycode.online_shop_api.app.Products.exceptions.NoProductFound;
 import mycode.online_shop_api.app.Products.model.Product;
 import mycode.online_shop_api.app.Products.repository.ProductRepository;
@@ -43,5 +44,17 @@ public class ProductQueryServiceImpl implements ProductQueryService{
             throw new NoProductFound("");
         }
 
+    }
+
+    @Override
+    public CreateProductResponse findById(int id) {
+        Optional<Product> product = productRepository.findById(id);
+
+        if(product.isPresent()){
+            return new CreateProductResponse(product.get().getId(),product.get().getCategory(),product.get().getCreateDate(),product.get().getDescriptions(),product.get().getName(),product.get().getPrice(),product.get().getStock(),product.get().getWeight());
+
+        }else{
+            throw new NoProductFound(" ");
+        }
     }
 }

@@ -1,9 +1,9 @@
 package mycode.online_shop_api.app.Orders.dtos;
 
 import mycode.online_shop_api.app.Customers.model.Customer;
-import mycode.online_shop_api.app.OrderDetails.validators.OrderConstraint;
 import mycode.online_shop_api.app.Orders.validators.*;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 public record CreateOrderRequest(
@@ -20,5 +20,5 @@ public record CreateOrderRequest(
         @StatusConstraint(message = "Order status cannot be empty")
         String orderStatus,
         @CustomerConstraint(message = "Customer cannot be empty")
-        Customer customer) {
+        Customer customer) implements Serializable {
 }

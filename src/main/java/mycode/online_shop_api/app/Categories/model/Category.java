@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import mycode.online_shop_api.app.ProductCategories.model.ProductCategories;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,7 +21,7 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @Builder
 @Table(name = "category")
 @Entity(name = "Category")
-public class Category {
+public class Category implements Serializable {
 
     @Id
     @SequenceGenerator(

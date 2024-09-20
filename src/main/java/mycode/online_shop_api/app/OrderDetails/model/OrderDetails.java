@@ -1,10 +1,13 @@
 package mycode.online_shop_api.app.OrderDetails.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import mycode.online_shop_api.app.Orders.model.Order;
 import mycode.online_shop_api.app.Products.model.Product;
+
+import java.io.Serializable;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
@@ -17,7 +20,7 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @Builder
 @Table(name = "order_details")
 @Entity(name = "OrderDetails")
-public class OrderDetails {
+public class OrderDetails implements Serializable {
 
     @Id
     @SequenceGenerator(
@@ -34,10 +37,12 @@ public class OrderDetails {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", referencedColumnName = "id")
+    @JsonBackReference
     private Order order;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", referencedColumnName = "id")
+    @JsonBackReference
     private Product product;
 
     @Column(

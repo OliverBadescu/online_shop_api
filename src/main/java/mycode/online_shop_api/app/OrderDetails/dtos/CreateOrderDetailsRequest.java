@@ -4,9 +4,10 @@ import mycode.online_shop_api.app.OrderDetails.validators.OrderConstraint;
 import mycode.online_shop_api.app.OrderDetails.validators.PriceConstraint;
 import mycode.online_shop_api.app.OrderDetails.validators.ProductConstraint;
 import mycode.online_shop_api.app.OrderDetails.validators.QuantityConstraint;
-import mycode.online_shop_api.app.Orders.dtos.CreateOrderRequest;
 import mycode.online_shop_api.app.Orders.model.Order;
 import mycode.online_shop_api.app.Products.model.Product;
+
+import java.io.Serializable;
 
 public record CreateOrderDetailsRequest(
         @PriceConstraint(message = "Price cannot be empty")
@@ -17,5 +18,5 @@ public record CreateOrderDetailsRequest(
         Order order,
         @ProductConstraint(message = "Product cannot be empty")
         Product product
-) {
+) implements Serializable {
 }

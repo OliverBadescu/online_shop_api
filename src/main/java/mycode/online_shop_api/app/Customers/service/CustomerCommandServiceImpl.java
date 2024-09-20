@@ -1,13 +1,15 @@
 package mycode.online_shop_api.app.Customers.service;
 
-import jakarta.persistence.OneToMany;
 import mycode.online_shop_api.app.Customers.dtos.CreateCustomerRequest;
+import mycode.online_shop_api.app.Customers.dtos.CreateCustomerResponse;
 import mycode.online_shop_api.app.Customers.exceptions.EmailAlreadyExists;
+import mycode.online_shop_api.app.Customers.exceptions.NoCustomerFound;
 import mycode.online_shop_api.app.Customers.model.Customer;
 import mycode.online_shop_api.app.Customers.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CustomerCommandServiceImpl implements CustomerCommandService{
@@ -20,19 +22,19 @@ public class CustomerCommandServiceImpl implements CustomerCommandService{
     }
 
 
-    public void editCustomer(CreateCustomerRequest customer){
+    public void deleteCustomer(int customerId){
 
+        Optional<Customer> customer = customerRepository.findById(customerId);
 
+        if(customer.isPresent()){
+            customerRepository.delete(customer.get());
+        }else{
+            throw new NoCustomerFound("");
+        }
     }
 
 
-    public void deleteCustomer(CreateCustomerRequest customer){
-
-
-    }
-
-
-    public void addCustomer(CreateCustomerRequest customer){
+    public CreateCustomerResponse addCustomer(CreateCustomerRequest customer){
 
 
         List<Customer> list = customerRepository.findAll();
@@ -45,7 +47,7 @@ public class CustomerCommandServiceImpl implements CustomerCommandService{
 
         Customer customerNew = Customer.builder().fullName(customer.fullName()).billingAddress(customer.billingAddress()).country(customer.country()).email(customer.email()).password(customer.password()).phone(customer.phone()).shippingAddress(customer.shippingAddress()).build();
         customerRepository.saveAndFlush(customerNew);
-
+        return new CreateCustomerResponse(customerNew.getId(),customerNew.getFullName(),customerNew.getEmail(),customerNew.getPassword(),customerNew.getBillingAddress(),customerNew.getShippingAddress(),customerNew.getPhone(),customerNew.getCountry());
 
     }
 

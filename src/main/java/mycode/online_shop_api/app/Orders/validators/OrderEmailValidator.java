@@ -3,7 +3,6 @@ package mycode.online_shop_api.app.Orders.validators;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import mycode.online_shop_api.app.OrderDetails.validators.QuantityConstraint;
-import mycode.online_shop_api.app.Orders.model.Order;
 
 public class OrderEmailValidator implements ConstraintValidator<QuantityConstraint, String> {
 

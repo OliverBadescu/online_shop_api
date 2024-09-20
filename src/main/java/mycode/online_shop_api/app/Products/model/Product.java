@@ -1,16 +1,20 @@
 package mycode.online_shop_api.app.Products.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.*;
 import mycode.online_shop_api.app.OrderDetails.model.OrderDetails;
 import mycode.online_shop_api.app.ProductCategories.model.ProductCategories;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-import jakarta.validation.constraints.*;
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @AllArgsConstructor
@@ -22,7 +26,7 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @Builder
 @Table(name = "products")
 @Entity(name = "Product")
-public class Product {
+public class Product implements Serializable {
 
 
     @Id
@@ -105,6 +109,7 @@ public class Product {
     @OneToMany(mappedBy ="product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
         @ToString.Exclude
+    @JsonManagedReference
     private Set<OrderDetails> orderDetails = new HashSet<>();
 
     private void addOrderDetails(OrderDetails orderDetails){
@@ -119,6 +124,7 @@ public class Product {
     @OneToMany(mappedBy ="product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
         @ToString.Exclude
+    @JsonManagedReference
     private Set<ProductCategories> productCategories = new HashSet<>();
 
     private void addProductCategory(ProductCategories productCategory){

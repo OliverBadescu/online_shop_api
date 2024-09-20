@@ -8,5 +8,7 @@ public class Constants {
 
     public static String NO_PRODUCT_FOUND = "No product with this name has been found";
 
-    public static String PRODUCT_PRICE_NEGATIVE = "Prodcut price can't be negative";
+    public static String PRODUCT_PRICE_NEGATIVE = "Product price can't be negative";
+
+    public static String NO_ORDER_FOUND = "No order with this id found";
 }

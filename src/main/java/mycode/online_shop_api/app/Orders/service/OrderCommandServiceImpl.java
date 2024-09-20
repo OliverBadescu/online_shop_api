@@ -6,8 +6,8 @@ import mycode.online_shop_api.app.Orders.dtos.CreateOrderRequest;
 import mycode.online_shop_api.app.Orders.mappers.OrderMapper;
 import mycode.online_shop_api.app.Orders.model.Order;
 import mycode.online_shop_api.app.Orders.repository.OrderRepository;
-import mycode.online_shop_api.app.Products.repository.ProductRepository;
 import mycode.online_shop_api.app.Products.dto.ProductDto;
+import mycode.online_shop_api.app.Products.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

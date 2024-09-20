@@ -1,14 +1,11 @@
 package mycode.online_shop_api;
 
-import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.Valid;
 import jakarta.validation.Validator;
 import mycode.online_shop_api.app.Customers.service.CustomerQueryService;
 import mycode.online_shop_api.app.OrderDetails.repository.OrderDetailsRepository;
 import mycode.online_shop_api.app.OrderDetails.service.OrderDetailsCommandService;
 import mycode.online_shop_api.app.Orders.repository.OrderRepository;
 import mycode.online_shop_api.app.Orders.service.OrderCommandService;
-import mycode.online_shop_api.app.Products.dto.ProductDto;
 import mycode.online_shop_api.app.Products.repository.ProductRepository;
 import mycode.online_shop_api.app.Products.service.ProductQueryService;
 import org.springframework.boot.CommandLineRunner;
@@ -28,16 +25,6 @@ public class OnlineShopApiApplication {
 
         return args -> {
 
-            @Valid
-            ProductDto productDto = new ProductDto("test", 1, 1.1);
-
-
-
-            validator.validate(productDto).stream().findFirst()
-                    .ifPresent(data->{
-
-                       throw  new ConstraintViolationException("failed "+data.getMessage(),null);
-                    });
 
 
         };

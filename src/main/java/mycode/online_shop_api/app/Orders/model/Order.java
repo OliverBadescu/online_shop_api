@@ -1,10 +1,13 @@
 package mycode.online_shop_api.app.Orders.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import mycode.online_shop_api.app.Customers.model.Customer;
 import mycode.online_shop_api.app.OrderDetails.model.OrderDetails;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Objects;
@@ -19,7 +22,7 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @ToString(exclude = "orderDetails")
 @Entity
 @Table(name = "customer_order")
-public class Order {
+public class Order implements Serializable {
 
     @Id
     @SequenceGenerator(
@@ -36,6 +39,7 @@ public class Order {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
+    @JsonBackReference
     private Customer customer;
 
     @Column(name = "amount", nullable = false)
@@ -58,6 +62,7 @@ public class Order {
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
+    @JsonManagedReference
     private Set<OrderDetails> orderDetails = new HashSet<>();
 
     public void addOrderDetails(OrderDetails orderDetails) {

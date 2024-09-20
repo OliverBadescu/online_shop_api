@@ -2,6 +2,8 @@ package mycode.online_shop_api.app.Customers.dtos;
 
 import mycode.online_shop_api.app.Customers.validators.*;
 
+import java.io.Serializable;
+
 public record CreateCustomerRequest(
 
         @FullNameConstraint(message = "Name cannot be empty")
@@ -17,7 +19,7 @@ public record CreateCustomerRequest(
         @PhoneConstraint(message = "Phone cannot be empty and cannot contain letters")
         String phone,
         @CountryConstraint(message = "Country cannot be empty")
-        String country) {
+        String country) implements Serializable {
 
 
 

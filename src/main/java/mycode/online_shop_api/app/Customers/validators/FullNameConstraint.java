@@ -3,7 +3,6 @@ package mycode.online_shop_api.app.Customers.validators;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
-import mycode.online_shop_api.app.Products.validator.NameValidator;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

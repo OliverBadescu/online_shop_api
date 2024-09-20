@@ -11,17 +11,18 @@ import mycode.online_shop_api.app.Orders.dtos.CreateOrderRequest;
 import mycode.online_shop_api.app.Orders.model.Order;
 import mycode.online_shop_api.app.Orders.service.OrderCommandService;
 import mycode.online_shop_api.app.Orders.service.OrderQueryService;
-import mycode.online_shop_api.app.Products.repository.ProductRepository;
+import mycode.online_shop_api.app.Products.dto.ProductDto;
 import mycode.online_shop_api.app.Products.model.Product;
+import mycode.online_shop_api.app.Products.repository.ProductRepository;
 import mycode.online_shop_api.app.Products.service.ProductQueryService;
 import mycode.online_shop_api.app.utile.Cart;
-import mycode.online_shop_api.app.Products.dto.ProductDto;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.Set;
 
-@Component
+//@Component
 public class View {
 
     private CustomerCommandService customerCommandService;

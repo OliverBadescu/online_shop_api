@@ -1,10 +1,12 @@
 package mycode.online_shop_api.app.Customers.model;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import mycode.online_shop_api.app.Orders.model.Order;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -20,7 +22,7 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @Builder
 @Table(name = "customer")
 @Entity(name = "Customer")
-public class Customer {
+public class Customer implements Serializable {
 
 
     @Id
@@ -94,6 +96,7 @@ public class Customer {
     @OneToMany(mappedBy ="customer",fetch = FetchType.LAZY,cascade = CascadeType.ALL ,orphanRemoval = true)
     @Builder.Default
         @ToString.Exclude
+    @JsonManagedReference
     private Set<Order> orders = new HashSet<>();
 
     public void addOrder(Order order){

@@ -2,6 +2,7 @@ package mycode.online_shop_api.app.Customers.service;
 
 import mycode.online_shop_api.app.Customers.dtos.CreateCustomerRequest;
 import mycode.online_shop_api.app.Customers.dtos.CreateCustomerResponse;
+import mycode.online_shop_api.app.Customers.dtos.CreateCustomerUpdateRequest;
 import mycode.online_shop_api.app.Customers.exceptions.EmailAlreadyExists;
 import mycode.online_shop_api.app.Customers.exceptions.NoCustomerFound;
 import mycode.online_shop_api.app.Customers.model.Customer;
@@ -49,6 +50,27 @@ public class CustomerCommandServiceImpl implements CustomerCommandService{
         customerRepository.saveAndFlush(customerNew);
         return new CreateCustomerResponse(customerNew.getId(),customerNew.getFullName(),customerNew.getEmail(),customerNew.getPassword(),customerNew.getBillingAddress(),customerNew.getShippingAddress(),customerNew.getPhone(),customerNew.getCountry());
 
+    }
+
+    @Override
+    public void updateCustomer(CreateCustomerUpdateRequest createCustomerUpdateRequest, int id) {
+        Optional<Customer> customer = customerRepository.findById(id);
+
+        if(customer.isPresent()){
+            Customer customer1 = customer.get();
+
+            customer1.setBillingAddress(createCustomerUpdateRequest.billingAddress());
+            customer1.setCountry(createCustomerUpdateRequest.country());
+            customer1.setEmail(createCustomerUpdateRequest.email());
+            customer1.setFullName(createCustomerUpdateRequest.fullName());
+            customer1.setPassword(createCustomerUpdateRequest.password());
+            customer1.setPhone(createCustomerUpdateRequest.phone());
+            customer1.setShippingAddress(createCustomerUpdateRequest.shippingAddress());
+
+             customerRepository.saveAndFlush(customer1);
+        }else{
+            throw new NoCustomerFound(" ");
+        }
     }
 
 

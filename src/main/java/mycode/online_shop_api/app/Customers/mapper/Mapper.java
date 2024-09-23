@@ -5,7 +5,7 @@ import mycode.online_shop_api.app.Customers.model.Customer;
 
 public class Mapper {
 
-    public static CreateCustomerResponse dtoToCustomer(Customer customer) {
+    public static CreateCustomerResponse customerToDto(Customer customer) {
         return new CreateCustomerResponse(
                 customer.getId(),
                 customer.getFullName(),

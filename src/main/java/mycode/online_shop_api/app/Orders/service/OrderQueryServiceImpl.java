@@ -22,7 +22,7 @@ public class OrderQueryServiceImpl implements OrderQueryService{
         Optional<Order> order = orderRepository.findById(id);
 
         if(order.isPresent()){
-            return new CreateOrderResponse(order.get().getId(),order.get().getOrderEmail(),order.get().getShippingAddress(),order.get().getOrderAddress(),order.get().getOrderDate(),order.get().getAmount(),order.get().getOrderStatus(), Mapper.dtoToCustomer(order.get().getCustomer()));
+            return new CreateOrderResponse(order.get().getId(),order.get().getOrderEmail(),order.get().getShippingAddress(),order.get().getOrderAddress(),order.get().getOrderDate(),order.get().getAmount(),order.get().getOrderStatus(), Mapper.customerToDto(order.get().getCustomer()));
 
         }else{
             throw new NoOrderFound(" ");

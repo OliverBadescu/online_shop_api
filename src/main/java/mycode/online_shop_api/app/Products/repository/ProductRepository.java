@@ -20,4 +20,5 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     @EntityGraph(attributePaths = {"productCategories", "orderDetails"}, type = EntityGraph.EntityGraphType.FETCH)
     Optional<Product> findByName(String name);
+
 }

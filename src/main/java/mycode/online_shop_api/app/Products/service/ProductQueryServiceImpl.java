@@ -2,10 +2,12 @@ package mycode.online_shop_api.app.Products.service;
 
 import mycode.online_shop_api.app.Products.dto.CreateProductResponse;
 import mycode.online_shop_api.app.Products.exceptions.NoProductFound;
+import mycode.online_shop_api.app.Products.mapper.ProductMapper;
 import mycode.online_shop_api.app.Products.model.Product;
 import mycode.online_shop_api.app.Products.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -56,5 +58,12 @@ public class ProductQueryServiceImpl implements ProductQueryService{
         }else{
             throw new NoProductFound(" ");
         }
+    }
+
+    @Override
+    public CreateProductResponse mostExpensive() {
+        Optional<List<Product>> list = productRepository.sortedDesc();
+        return ProductMapper.productToResponseDto(list.get().get(0));
+
     }
 }

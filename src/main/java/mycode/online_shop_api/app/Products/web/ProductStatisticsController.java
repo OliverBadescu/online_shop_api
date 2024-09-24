@@ -25,9 +25,13 @@ public class ProductStatisticsController {
     //most sold product
     @GetMapping(path = "/mostSold")
     public ResponseEntity<CreateProductResponse> getMostSoldProduct(){
-
         return new ResponseEntity<>(orderDetailsQueryService.mostSoldProduct(), HttpStatus.OK);
+    }
 
+
+    @GetMapping(path = "/mostExpensive")
+    public ResponseEntity<CreateProductResponse> getMostExpensiveProduct(){
+        return new ResponseEntity<>(productQueryService.mostExpensive(), HttpStatus.OK);
     }
 
 

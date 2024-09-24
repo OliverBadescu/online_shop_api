@@ -14,4 +14,6 @@ public interface ProductQueryService {
     Product findByName(String name);
 
     CreateProductResponse findById(int id);
+
+    CreateProductResponse mostExpensive();
 }

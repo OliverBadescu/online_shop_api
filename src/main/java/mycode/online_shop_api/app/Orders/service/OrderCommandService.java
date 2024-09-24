@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public interface OrderCommandService {
 
-    CreateOrderResponse addOrder(CreateOrderRequest createOrderRequest, ArrayList<ProductDto> list);
+    CreateOrderResponse addOrder(CreateOrderRequest createOrderRequest);
 
     CreateOrderResponse deleteOrder(int id);
 

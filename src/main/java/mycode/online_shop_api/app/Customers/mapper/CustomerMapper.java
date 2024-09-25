@@ -3,9 +3,9 @@ package mycode.online_shop_api.app.Customers.mapper;
 import mycode.online_shop_api.app.Customers.dtos.CreateCustomerResponse;
 import mycode.online_shop_api.app.Customers.model.Customer;
 
-public class Mapper {
+public class CustomerMapper {
 
-    public static CreateCustomerResponse dtoToCustomer(Customer customer) {
+    public static CreateCustomerResponse customerToDto(Customer customer) {
         return new CreateCustomerResponse(
                 customer.getId(),
                 customer.getFullName(),

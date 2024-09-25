@@ -34,9 +34,9 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<CreateOrderResponse> createOrder(@RequestBody CreateOrderRequest createOrderRequest, @RequestBody ArrayList<ProductDto> list){
+    public ResponseEntity<CreateOrderResponse> createOrder(@RequestBody CreateOrderRequest createOrderRequest){
 
-        return new ResponseEntity<>(orderCommandService.addOrder(createOrderRequest, list), HttpStatus.CREATED);
+        return new ResponseEntity<>(orderCommandService.addOrder(createOrderRequest), HttpStatus.CREATED);
 
     }
 

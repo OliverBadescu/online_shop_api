@@ -7,6 +7,7 @@ import mycode.online_shop_api.app.Products.model.Product;
 import mycode.online_shop_api.app.Products.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,5 +66,24 @@ public class ProductQueryServiceImpl implements ProductQueryService{
         Optional<List<Product>> list = productRepository.sortedDesc();
         return ProductMapper.productToResponseDto(list.get().get(0));
 
+    }
+
+    @Override
+    public List<CreateProductResponse> getByCategory(String category) {
+        List<CreateProductResponse> list = new ArrayList<>();
+
+        List<Product> products = productRepository.findAll();
+
+        products.forEach(product -> {
+            if(product.getCategory().equals(category)){
+                list.add(ProductMapper.productToResponseDto(product));
+            }
+        });
+
+        if(list.isEmpty()){
+            throw new NoProductFound("No products in this category found");
+        }else{
+            return list;
+        }
     }
 }

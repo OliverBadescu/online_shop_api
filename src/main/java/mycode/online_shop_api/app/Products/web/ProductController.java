@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/product")
@@ -57,6 +59,14 @@ public class ProductController {
         productCommandService.updateProductPatch(productId,updateProductRequest);
         CreateProductResponse createProductResponse = productQueryService.findById(productId);
         return new ResponseEntity<>(createProductResponse, HttpStatus.ACCEPTED);
+
+    }
+
+
+    @GetMapping(path = "/category/{categoryName}")
+    public ResponseEntity<List<CreateProductResponse>> getByCategories(@PathVariable String categoryName){
+
+        return new ResponseEntity<>(productQueryService.getByCategory(categoryName), HttpStatus.ACCEPTED);
 
     }
 }

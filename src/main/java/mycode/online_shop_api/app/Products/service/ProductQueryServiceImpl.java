@@ -36,18 +36,6 @@ public class ProductQueryServiceImpl implements ProductQueryService{
         productRepository.sortedDesc().get().forEach(System.out::println);
     }
 
-    @Override
-    public Product findByName(String name) {
-
-        Optional<Product> product = productRepository.findByName(name);
-
-        if(product.isPresent()){
-            return product.get();
-        }else{
-            throw new NoProductFound("");
-        }
-
-    }
 
     @Override
     public CreateProductResponse findById(int id) {
@@ -85,5 +73,15 @@ public class ProductQueryServiceImpl implements ProductQueryService{
         }else{
             return list;
         }
+    }
+
+    @Override
+    public CreateProductResponse findByName(String productName) {
+
+        Product product = productRepository.findByName(productName)
+                .orElseThrow(() -> new NoProductFound("No product with this name found"));
+
+
+        return ProductMapper.productToResponseDto(product);
     }
 }

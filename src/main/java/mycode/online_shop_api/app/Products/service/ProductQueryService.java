@@ -13,11 +13,11 @@ public interface ProductQueryService {
 
     void showProductsSortedDESC();
 
-    Product findByName(String name);
-
     CreateProductResponse findById(int id);
 
     CreateProductResponse mostExpensive();
 
     List<CreateProductResponse> getByCategory(String category);
+
+    CreateProductResponse findByName(String productName);
 }

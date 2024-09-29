@@ -69,4 +69,10 @@ public class ProductController {
         return new ResponseEntity<>(productQueryService.getByCategory(categoryName), HttpStatus.ACCEPTED);
 
     }
+
+    @GetMapping(path = "/search/{productName}")
+    public ResponseEntity<CreateProductResponse> findByName(@PathVariable String productName){
+        return new ResponseEntity<>(productQueryService.findByName(productName), HttpStatus.ACCEPTED);
+
+    }
 }

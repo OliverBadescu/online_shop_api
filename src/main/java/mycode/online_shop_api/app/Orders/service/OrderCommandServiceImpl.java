@@ -5,11 +5,13 @@ import mycode.online_shop_api.app.Customers.exceptions.NoCustomerFound;
 import mycode.online_shop_api.app.Customers.mapper.CustomerMapper;
 import mycode.online_shop_api.app.Customers.model.Customer;
 import mycode.online_shop_api.app.Customers.repository.CustomerRepository;
+import mycode.online_shop_api.app.OrderDetails.exceptions.NoOrderDetailsFound;
 import mycode.online_shop_api.app.OrderDetails.model.OrderDetails;
 import mycode.online_shop_api.app.OrderDetails.repository.OrderDetailsRepository;
 import mycode.online_shop_api.app.Orders.dtos.CreateOrderRequest;
 import mycode.online_shop_api.app.Orders.dtos.CreateOrderResponse;
 import mycode.online_shop_api.app.Orders.dtos.CreateOrderUpdateRequest;
+import mycode.online_shop_api.app.Orders.dtos.EditOrderRequest;
 import mycode.online_shop_api.app.Orders.exceptions.NoOrderFound;
 import mycode.online_shop_api.app.Orders.mappers.OrderMapper;
 import mycode.online_shop_api.app.Orders.model.Order;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @AllArgsConstructor
 @Service
@@ -40,7 +43,7 @@ public class OrderCommandServiceImpl implements OrderCommandService{
         List<ProductDto> list = createOrderRequest.list();
 
         Order order = OrderMapper.requestDtoToOrder(createOrderRequest);
-        Customer customer = customerRepository.findById(createOrderRequest.customerId())
+        Customer customer = customerRepository.findById(Integer.valueOf(createOrderRequest.customerId()))
                 .orElseThrow(() -> new NoCustomerFound("Customer not found"));
         order.setCustomer(customer);
         order.setAmount(0);
@@ -56,7 +59,7 @@ public class OrderCommandServiceImpl implements OrderCommandService{
                             .quantity(productDto.getCantitate())
                             .build();
                     orderDetailsRepository.saveAndFlush(orderDetails);
-                    return orderDetails.getPrice() * orderDetails.getQuantity();
+                    return (Double) (orderDetails.getPrice() * orderDetails.getQuantity());
                 })
                 .mapToDouble(Double::doubleValue)
                 .sum();
@@ -78,7 +81,7 @@ public class OrderCommandServiceImpl implements OrderCommandService{
 
     @Override
     public CreateOrderResponse deleteOrder(int id) {
-        Optional<Order> order = orderRepository.findById(id);
+        Optional<Order> order = orderRepository.findById(Integer.valueOf(id));
 
         if(order.isPresent()){
             CreateOrderResponse createOrderResponse = new CreateOrderResponse(order.get().getId(), order.get().getOrderEmail(),order.get().getShippingAddress(),order.get().getOrderAddress(),order.get().getOrderDate(),order.get().getAmount(),order.get().getOrderStatus(), CustomerMapper.customerToDto(order.get().getCustomer()));
@@ -91,7 +94,7 @@ public class OrderCommandServiceImpl implements OrderCommandService{
 
     @Override
     public void updateOrder(int id, CreateOrderUpdateRequest createOrderUpdateRequest) {
-        Optional<Order> order= orderRepository.findById(id);
+        Optional<Order> order= orderRepository.findById(Integer.valueOf(id));
 
         if(order.isPresent()){
             Order order1 = order.get();
@@ -108,5 +111,80 @@ public class OrderCommandServiceImpl implements OrderCommandService{
             throw new NoOrderFound(" ");
         }
 
+    }
+
+    @Override
+    public CreateOrderResponse deleteProductFromOrder(int orderId, EditOrderRequest editOrderRequest) {
+        Product product = productRepository.findByName(editOrderRequest.productName())
+                .orElseThrow(() -> new NoProductFound("No product with this name found"));
+
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new NoOrderFound("No order with this ID found"));
+
+        OrderDetails orderDetails = orderDetailsRepository
+                .findByOrderIdAndProductId(order.getId(), product.getId())
+                .orElseThrow(() -> new NoOrderDetailsFound("No order details for this order and product found"));
+
+        double productTotalPrice = orderDetails.getQuantity() * orderDetails.getPrice();
+        order.setAmount(order.getAmount() - productTotalPrice);
+
+        order.removeOrderDetails(orderDetails);
+
+        orderDetailsRepository.delete(orderDetails);
+
+        orderRepository.save(order);
+        return OrderMapper.orderToResponseDto(order);
+    }
+
+    @Override
+    public CreateOrderResponse updateProductQuantity(int orderId, EditOrderRequest editOrderRequest) {
+        Product product = productRepository.findByName(editOrderRequest.productName())
+                .orElseThrow(() -> new NoProductFound("No product with this name found"));
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new NoOrderFound("No order with this id found"));
+
+
+        OrderDetails orderDetails = orderDetailsRepository
+                .findByOrderIdAndProductId(order.getId(), product.getId())
+                .orElseThrow(() -> new NoOrderDetailsFound("No order details for this order and product found"));
+
+        int oldQuantity = orderDetails.getQuantity();
+        int newQuantity = editOrderRequest.quantity();
+
+        orderDetails.setQuantity(newQuantity);
+
+        int quantityDifference = newQuantity - oldQuantity;
+
+
+        order.setAmount(order.getAmount() + (quantityDifference * orderDetails.getPrice()));
+
+
+        orderRepository.save(order);
+        orderDetailsRepository.save(orderDetails);
+
+
+        return OrderMapper.orderToResponseDto(order);
+    }
+
+
+    @Override
+    public CreateOrderResponse cancelOrder(int orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new NoOrderFound("No order with this ID found"));
+
+        Set<OrderDetails> orderDetailsSet = order.getOrderDetails();
+
+        orderDetailsSet.forEach(orderDetails -> {
+            order.removeOrderDetails(orderDetails);
+            orderDetailsRepository.delete(orderDetails);
+        });
+
+        order.setOrderStatus("Cancelled");
+
+
+        orderRepository.save(order);
+        return OrderMapper.orderToResponseDto(order);
     }
 }

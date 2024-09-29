@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import mycode.online_shop_api.app.Orders.dtos.CreateOrderRequest;
 import mycode.online_shop_api.app.Orders.dtos.CreateOrderResponse;
 import mycode.online_shop_api.app.Orders.dtos.CreateOrderUpdateRequest;
+import mycode.online_shop_api.app.Orders.dtos.EditOrderRequest;
 import mycode.online_shop_api.app.Orders.model.Order;
 import mycode.online_shop_api.app.Orders.repository.OrderRepository;
 import mycode.online_shop_api.app.Orders.service.OrderCommandService;
@@ -51,6 +52,25 @@ public class OrderController {
         orderCommandService.updateOrder(orderId,createOrderUpdateRequest);
 
         return new ResponseEntity<>(orderQueryService.findById(orderId), HttpStatus.ACCEPTED);
+    }
+
+    @PutMapping(path = "/editOrder/{orderId}")
+    public ResponseEntity<CreateOrderResponse> editOrder(@PathVariable int orderId, @RequestBody EditOrderRequest editOrderRequest) {
+
+        // todo: improve with enum
+        String action = editOrderRequest.action();
+        System.out.println(editOrderRequest.productName());
+
+        switch (action) {
+            case "delete":
+                return new ResponseEntity<>(orderCommandService.deleteProductFromOrder(orderId, editOrderRequest), HttpStatus.ACCEPTED);
+            case "edit":
+                return new ResponseEntity<>(orderCommandService.updateProductQuantity(orderId, editOrderRequest), HttpStatus.ACCEPTED);
+            case "cancel":
+                return new ResponseEntity<>(orderCommandService.cancelOrder(orderId), HttpStatus.ACCEPTED);
+            default:
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
 }

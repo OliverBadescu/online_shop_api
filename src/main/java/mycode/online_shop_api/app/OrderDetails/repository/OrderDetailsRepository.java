@@ -1,8 +1,8 @@
-package mycode.online_shop_api.app.OrderDetails.repository;
+package mycode.online_shop_api.app.orderDetails.repository;
 
-import mycode.online_shop_api.app.OrderDetails.model.OrderDetails;
-import mycode.online_shop_api.app.Orders.model.Order;
-import mycode.online_shop_api.app.Products.model.Product;
+
+
+import mycode.online_shop_api.app.orderDetails.model.OrderDetails;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

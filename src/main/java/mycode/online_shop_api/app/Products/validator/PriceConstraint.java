@@ -1,4 +1,4 @@
-package mycode.online_shop_api.app.Products.validator;
+package mycode.online_shop_api.app.products.validator;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

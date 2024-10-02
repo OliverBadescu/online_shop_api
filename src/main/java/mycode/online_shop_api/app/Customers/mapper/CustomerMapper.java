@@ -1,12 +1,12 @@
-package mycode.online_shop_api.app.Customers.mapper;
+package mycode.online_shop_api.app.customers.mapper;
 
-import mycode.online_shop_api.app.Customers.dtos.CreateCustomerResponse;
-import mycode.online_shop_api.app.Customers.model.Customer;
+import mycode.online_shop_api.app.customers.dtos.CustomerResponse;
+import mycode.online_shop_api.app.customers.model.Customer;
 
 public class CustomerMapper {
 
-    public static CreateCustomerResponse customerToDto(Customer customer) {
-        return new CreateCustomerResponse(
+    public static CustomerResponse customerToDto(Customer customer) {
+        return new CustomerResponse(
                 customer.getId(),
                 customer.getFullName(),
                 customer.getEmail(),
@@ -18,7 +18,7 @@ public class CustomerMapper {
         );
     }
 
-    public static Customer dtoToCustomer(CreateCustomerResponse dto) {
+    public static Customer dtoToCustomer(CustomerResponse dto) {
         return Customer.builder()
                 .id(dto.id())
                 .fullName(dto.fullName())

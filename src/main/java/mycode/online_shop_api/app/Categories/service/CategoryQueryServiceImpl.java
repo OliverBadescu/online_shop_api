@@ -1,4 +1,10 @@
-package mycode.online_shop_api.app.Categories.service;
+package mycode.online_shop_api.app.categories.service;
 
-public class CategoryQueryServiceImpl {
+
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@Service
+@AllArgsConstructor
+public class CategoryQueryServiceImpl implements CategoryQueryService{
 }

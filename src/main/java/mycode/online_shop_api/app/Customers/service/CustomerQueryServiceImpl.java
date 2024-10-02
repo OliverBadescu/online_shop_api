@@ -1,9 +1,9 @@
-package mycode.online_shop_api.app.Customers.service;
+package mycode.online_shop_api.app.customers.service;
 
-import mycode.online_shop_api.app.Customers.dtos.CreateCustomerResponse;
-import mycode.online_shop_api.app.Customers.exceptions.NoCustomerFound;
-import mycode.online_shop_api.app.Customers.model.Customer;
-import mycode.online_shop_api.app.Customers.repository.CustomerRepository;
+import mycode.online_shop_api.app.customers.dtos.CustomerResponse;
+import mycode.online_shop_api.app.customers.exceptions.NoCustomerFound;
+import mycode.online_shop_api.app.customers.model.Customer;
+import mycode.online_shop_api.app.customers.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -34,11 +34,11 @@ public class CustomerQueryServiceImpl implements CustomerQueryService{
     }
 
     @Override
-    public CreateCustomerResponse findById(int id) {
+    public CustomerResponse findById(int id) {
         Optional<Customer> customer = customerRepository.findById(id);
 
         if(customer.isPresent()){
-            return new CreateCustomerResponse(customer.get().getId(), customer.get().getFullName(), customer.get().getEmail(), customer.get().getPassword(), customer.get().getBillingAddress(),customer.get().getShippingAddress(),customer.get().getPhone(),customer.get().getCountry());
+            return new CustomerResponse(customer.get().getId(), customer.get().getFullName(), customer.get().getEmail(), customer.get().getPassword(), customer.get().getBillingAddress(),customer.get().getShippingAddress(),customer.get().getPhone(),customer.get().getCountry());
         }else{
             throw new NoCustomerFound(" ");
         }

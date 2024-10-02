@@ -1,10 +1,10 @@
-package mycode.online_shop_api.app.Customers.model;
+package mycode.online_shop_api.app.customers.model;
 
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
-import mycode.online_shop_api.app.Orders.model.Order;
+import mycode.online_shop_api.app.orders.model.Order;
 
 import java.io.Serializable;
 import java.util.HashSet;

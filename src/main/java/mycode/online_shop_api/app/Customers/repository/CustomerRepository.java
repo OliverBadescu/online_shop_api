@@ -1,11 +1,9 @@
-package mycode.online_shop_api.app.Customers.repository;
+package mycode.online_shop_api.app.customers.repository;
 
-import mycode.online_shop_api.app.Customers.model.Customer;
-import mycode.online_shop_api.app.Orders.model.Order;
+import mycode.online_shop_api.app.customers.model.Customer;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface CustomerRepository extends JpaRepository<Customer, Integer> {

@@ -1,11 +1,11 @@
-package mycode.online_shop_api.app.Orders.model;
+package mycode.online_shop_api.app.orders.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
-import mycode.online_shop_api.app.Customers.model.Customer;
-import mycode.online_shop_api.app.OrderDetails.model.OrderDetails;
+import mycode.online_shop_api.app.customers.model.Customer;
+import mycode.online_shop_api.app.orderDetails.model.OrderDetails;
 
 import java.io.Serializable;
 import java.time.LocalDate;

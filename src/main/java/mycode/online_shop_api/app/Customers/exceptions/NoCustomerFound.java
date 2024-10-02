@@ -1,4 +1,4 @@
-package mycode.online_shop_api.app.Customers.exceptions;
+package mycode.online_shop_api.app.customers.exceptions;
 
 import mycode.online_shop_api.app.utile.Constants;
 import org.springframework.http.HttpStatus;

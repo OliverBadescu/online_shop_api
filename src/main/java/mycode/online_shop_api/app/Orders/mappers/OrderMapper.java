@@ -1,14 +1,14 @@
-package mycode.online_shop_api.app.Orders.mappers;
+package mycode.online_shop_api.app.orders.mappers;
 
-import mycode.online_shop_api.app.Customers.mapper.CustomerMapper;
-import mycode.online_shop_api.app.Orders.dtos.CreateOrderRequest;
-import mycode.online_shop_api.app.Orders.dtos.CreateOrderResponse;
-import mycode.online_shop_api.app.Orders.model.Order;
+import mycode.online_shop_api.app.customers.mapper.CustomerMapper;
+import mycode.online_shop_api.app.orders.dtos.CreateOrderRequest;
+import mycode.online_shop_api.app.orders.dtos.OrderResponse;
+import mycode.online_shop_api.app.orders.model.Order;
 
 public class OrderMapper {
 
-    public static CreateOrderResponse orderToResponseDto(Order order) {
-        return new CreateOrderResponse(
+    public static OrderResponse orderToResponseDto(Order order) {
+        return new OrderResponse(
                 order.getId(),
                 order.getOrderEmail(),
                 order.getShippingAddress(),
@@ -20,7 +20,7 @@ public class OrderMapper {
         );
     }
 
-    public static Order responseDtoToOrder(CreateOrderResponse dto) {
+    public static Order responseDtoToOrder(OrderResponse dto) {
         return Order.builder()
                 .amount(dto.amount())
                 .customer(CustomerMapper.dtoToCustomer(dto.customer()))

@@ -1,4 +1,4 @@
-package mycode.online_shop_api.app.Customers.dtos;
+package mycode.online_shop_api.app.customers.dtos;
 
 import jakarta.validation.constraints.NotNull;
 

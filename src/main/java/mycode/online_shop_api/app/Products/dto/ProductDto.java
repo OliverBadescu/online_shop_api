@@ -1,12 +1,12 @@
-package mycode.online_shop_api.app.Products.dto;
+package mycode.online_shop_api.app.products.dto;
 
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import mycode.online_shop_api.app.Products.validator.NameConstraint;
-import mycode.online_shop_api.app.Products.validator.PriceConstraint;
-import mycode.online_shop_api.app.Products.validator.QuantityConstraint;
+import mycode.online_shop_api.app.products.validator.NameConstraint;
+import mycode.online_shop_api.app.products.validator.PriceConstraint;
+import mycode.online_shop_api.app.products.validator.QuantityConstraint;
 
 @Getter
 @Setter

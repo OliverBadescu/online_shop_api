@@ -1,11 +1,11 @@
-package mycode.online_shop_api.app.OrderDetails.dtos;
+package mycode.online_shop_api.app.orderDetails.dtos;
 
-import mycode.online_shop_api.app.OrderDetails.validators.OrderConstraint;
-import mycode.online_shop_api.app.OrderDetails.validators.PriceConstraint;
-import mycode.online_shop_api.app.OrderDetails.validators.ProductConstraint;
-import mycode.online_shop_api.app.OrderDetails.validators.QuantityConstraint;
-import mycode.online_shop_api.app.Orders.model.Order;
-import mycode.online_shop_api.app.Products.model.Product;
+import mycode.online_shop_api.app.orderDetails.validators.OrderConstraint;
+import mycode.online_shop_api.app.orderDetails.validators.PriceConstraint;
+import mycode.online_shop_api.app.orderDetails.validators.ProductConstraint;
+import mycode.online_shop_api.app.orderDetails.validators.QuantityConstraint;
+import mycode.online_shop_api.app.orders.model.Order;
+import mycode.online_shop_api.app.products.model.Product;
 
 import java.io.Serializable;
 

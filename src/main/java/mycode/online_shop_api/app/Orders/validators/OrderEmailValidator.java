@@ -1,8 +1,8 @@
-package mycode.online_shop_api.app.Orders.validators;
+package mycode.online_shop_api.app.orders.validators;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import mycode.online_shop_api.app.OrderDetails.validators.QuantityConstraint;
+import mycode.online_shop_api.app.orderDetails.validators.QuantityConstraint;
 
 public class OrderEmailValidator implements ConstraintValidator<QuantityConstraint, String> {
 

@@ -1,6 +1,6 @@
-package mycode.online_shop_api.app.OrderDetails.service;
+package mycode.online_shop_api.app.orderDetails.service;
 
-import mycode.online_shop_api.app.OrderDetails.dtos.CreateOrderDetailsRequest;
+import mycode.online_shop_api.app.orderDetails.dtos.CreateOrderDetailsRequest;
 
 public interface OrderDetailsCommandService {
 

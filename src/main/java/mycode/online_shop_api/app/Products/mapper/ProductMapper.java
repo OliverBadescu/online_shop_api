@@ -1,18 +1,15 @@
-package mycode.online_shop_api.app.Products.mapper;
+package mycode.online_shop_api.app.products.mapper;
 
 import lombok.Builder;
-import mycode.online_shop_api.app.Customers.mapper.CustomerMapper;
-import mycode.online_shop_api.app.Orders.dtos.CreateOrderResponse;
-import mycode.online_shop_api.app.Orders.model.Order;
-import mycode.online_shop_api.app.Products.dto.CreateProductResponse;
-import mycode.online_shop_api.app.Products.model.Product;
+import mycode.online_shop_api.app.products.dto.ProductResponse;
+import mycode.online_shop_api.app.products.model.Product;
 
 @Builder
 public class ProductMapper {
 
 
-    public static CreateProductResponse productToResponseDto(Product product){
-        return CreateProductResponse.builder()
+    public static ProductResponse productToResponseDto(Product product){
+        return ProductResponse.builder()
                 .category(product.getCategory())
                 .createDate(product.getCreateDate())
                 .id(product.getId())
@@ -24,7 +21,7 @@ public class ProductMapper {
                 .build();
     }
 
-    public static Product responseDtoToProduct(CreateProductResponse product){
+    public static Product responseDtoToProduct(ProductResponse product){
         return Product.builder()
                 .category(product.category())
                 .createDate(product.createDate())

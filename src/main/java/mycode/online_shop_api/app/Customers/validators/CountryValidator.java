@@ -1,8 +1,8 @@
-package mycode.online_shop_api.app.Customers.validators;
+package mycode.online_shop_api.app.customers.validators;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import mycode.online_shop_api.app.Products.validator.NameConstraint;
+import mycode.online_shop_api.app.products.validator.NameConstraint;
 
 public class CountryValidator implements ConstraintValidator<NameConstraint,String> {
     @Override

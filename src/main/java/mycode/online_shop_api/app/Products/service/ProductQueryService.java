@@ -1,9 +1,7 @@
-package mycode.online_shop_api.app.Products.service;
+package mycode.online_shop_api.app.products.service;
 
-import mycode.online_shop_api.app.Products.dto.CreateProductResponse;
-import mycode.online_shop_api.app.Products.model.Product;
-
-import java.util.List;
+import mycode.online_shop_api.app.products.dto.ProductResponse;
+import mycode.online_shop_api.app.products.dto.ProductResponseList;
 
 public interface ProductQueryService {
 
@@ -13,11 +11,11 @@ public interface ProductQueryService {
 
     void showProductsSortedDESC();
 
-    CreateProductResponse findById(int id);
+    ProductResponse findById(int id);
 
-    CreateProductResponse mostExpensive();
+    ProductResponse mostExpensive();
 
-    List<CreateProductResponse> getByCategory(String category);
+    ProductResponseList getByCategory(String category);
 
-    CreateProductResponse findByName(String productName);
+    ProductResponse findByName(String productName);
 }

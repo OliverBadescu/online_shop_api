@@ -1,8 +1,8 @@
-package mycode.online_shop_api.app.OrderDetails.validators;
+package mycode.online_shop_api.app.orderDetails.validators;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import mycode.online_shop_api.app.Orders.model.Order;
+import mycode.online_shop_api.app.orders.model.Order;
 
 public class OrderValidator implements ConstraintValidator<QuantityConstraint, Order> {
     @Override

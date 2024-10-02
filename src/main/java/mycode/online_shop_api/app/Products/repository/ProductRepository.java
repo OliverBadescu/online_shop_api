@@ -1,6 +1,6 @@
-package mycode.online_shop_api.app.Products.repository;
+package mycode.online_shop_api.app.products.repository;
 
-import mycode.online_shop_api.app.Products.model.Product;
+import mycode.online_shop_api.app.products.model.Product;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

@@ -1,13 +1,13 @@
-package mycode.online_shop_api.app.Orders.service;
+package mycode.online_shop_api.app.orders.service;
 
-import mycode.online_shop_api.app.Orders.dtos.CreateOrderResponse;
+import mycode.online_shop_api.app.orders.dtos.OrderResponse;
 
 import java.util.List;
 
 public interface OrderQueryService {
 
-    CreateOrderResponse findById(int id);
+    OrderResponse findById(int id);
 
-    List<CreateOrderResponse> customerOrders(int customerId);
+    List<OrderResponse> customerOrders(int customerId);
 
 }

@@ -1,11 +1,10 @@
-package mycode.online_shop_api.app.OrderDetails.service;
+package mycode.online_shop_api.app.orderDetails.service;
 
-import mycode.online_shop_api.app.Products.dto.CreateProductResponse;
-import mycode.online_shop_api.app.Products.model.Product;
+import mycode.online_shop_api.app.products.dto.ProductResponse;
 
 public interface OrderDetailsQueryService {
 
 
-    CreateProductResponse mostSoldProduct();
+    ProductResponse mostSoldProduct();
 
 }

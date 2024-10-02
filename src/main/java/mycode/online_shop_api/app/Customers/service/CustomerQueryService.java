@@ -1,7 +1,7 @@
-package mycode.online_shop_api.app.Customers.service;
+package mycode.online_shop_api.app.customers.service;
 
-import mycode.online_shop_api.app.Customers.dtos.CreateCustomerResponse;
-import mycode.online_shop_api.app.Customers.model.Customer;
+import mycode.online_shop_api.app.customers.dtos.CustomerResponse;
+import mycode.online_shop_api.app.customers.model.Customer;
 
 public interface CustomerQueryService {
 
@@ -9,6 +9,6 @@ public interface CustomerQueryService {
 
     boolean existsByEmail(String email);
 
-    CreateCustomerResponse findById(int id);
+    CustomerResponse findById(int id);
 
 }

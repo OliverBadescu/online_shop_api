@@ -1,8 +1,8 @@
-package mycode.online_shop_api.app.Orders.validators;
+package mycode.online_shop_api.app.orders.validators;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import mycode.online_shop_api.app.Products.validator.NameConstraint;
+import mycode.online_shop_api.app.products.validator.NameConstraint;
 
 import java.time.LocalDate;
 

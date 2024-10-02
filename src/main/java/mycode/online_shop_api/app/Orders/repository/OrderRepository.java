@@ -1,6 +1,7 @@
-package mycode.online_shop_api.app.Orders.repository;
+package mycode.online_shop_api.app.orders.repository;
 
-import mycode.online_shop_api.app.Orders.model.Order;
+
+import mycode.online_shop_api.app.orders.model.Order;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

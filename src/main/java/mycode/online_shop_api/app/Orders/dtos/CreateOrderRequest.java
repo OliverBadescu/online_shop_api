@@ -1,13 +1,11 @@
-package mycode.online_shop_api.app.Orders.dtos;
+package mycode.online_shop_api.app.orders.dtos;
 
 import jakarta.validation.constraints.NotNull;
-import mycode.online_shop_api.app.Customers.model.Customer;
-import mycode.online_shop_api.app.Orders.validators.*;
-import mycode.online_shop_api.app.Products.dto.ProductDto;
+import mycode.online_shop_api.app.orders.validators.*;
+import mycode.online_shop_api.app.products.dto.ProductDto;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 public record CreateOrderRequest(

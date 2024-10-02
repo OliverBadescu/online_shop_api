@@ -1,6 +1,6 @@
-package mycode.online_shop_api.app.Customers.dtos;
+package mycode.online_shop_api.app.customers.dtos;
 
-import mycode.online_shop_api.app.Customers.validators.*;
+import mycode.online_shop_api.app.customers.validators.*;
 
 import java.io.Serializable;
 

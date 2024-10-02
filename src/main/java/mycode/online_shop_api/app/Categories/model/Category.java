@@ -1,10 +1,10 @@
-package mycode.online_shop_api.app.Categories.model;
+package mycode.online_shop_api.app.categories.model;
 
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import mycode.online_shop_api.app.ProductCategories.model.ProductCategories;
+import mycode.online_shop_api.app.productCategories.model.ProductCategories;
 
 import java.io.Serializable;
 import java.util.HashSet;

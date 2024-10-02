@@ -1,8 +1,8 @@
-package mycode.online_shop_api.app.Customers.dtos;
+package mycode.online_shop_api.app.customers.dtos;
 
 import java.io.Serializable;
 
-public record CreateCustomerResponse(
+public record CustomerResponse(
                                      int id,
                                      String fullName,
                                      String email,

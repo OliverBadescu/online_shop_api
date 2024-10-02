@@ -1,10 +1,11 @@
-package mycode.online_shop_api.app.Products.service;
+package mycode.online_shop_api.app.products.service;
 
-import mycode.online_shop_api.app.Products.dto.CreateProductResponse;
-import mycode.online_shop_api.app.Products.exceptions.NoProductFound;
-import mycode.online_shop_api.app.Products.mapper.ProductMapper;
-import mycode.online_shop_api.app.Products.model.Product;
-import mycode.online_shop_api.app.Products.repository.ProductRepository;
+import mycode.online_shop_api.app.products.dto.ProductResponse;
+import mycode.online_shop_api.app.products.dto.ProductResponseList;
+import mycode.online_shop_api.app.products.exceptions.NoProductFound;
+import mycode.online_shop_api.app.products.mapper.ProductMapper;
+import mycode.online_shop_api.app.products.model.Product;
+import mycode.online_shop_api.app.products.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -38,11 +39,11 @@ public class ProductQueryServiceImpl implements ProductQueryService{
 
 
     @Override
-    public CreateProductResponse findById(int id) {
+    public ProductResponse findById(int id) {
         Optional<Product> product = productRepository.findById(id);
 
         if(product.isPresent()){
-            return new CreateProductResponse(product.get().getId(),product.get().getCategory(),product.get().getCreateDate(),product.get().getDescriptions(),product.get().getName(),product.get().getPrice(),product.get().getStock(),product.get().getWeight());
+            return new ProductResponse(product.get().getId(),product.get().getCategory(),product.get().getCreateDate(),product.get().getDescriptions(),product.get().getName(),product.get().getPrice(),product.get().getStock(),product.get().getWeight());
 
         }else{
             throw new NoProductFound(" ");
@@ -50,15 +51,15 @@ public class ProductQueryServiceImpl implements ProductQueryService{
     }
 
     @Override
-    public CreateProductResponse mostExpensive() {
+    public ProductResponse mostExpensive() {
         Optional<List<Product>> list = productRepository.sortedDesc();
         return ProductMapper.productToResponseDto(list.get().get(0));
 
     }
 
     @Override
-    public List<CreateProductResponse> getByCategory(String category) {
-        List<CreateProductResponse> list = new ArrayList<>();
+    public ProductResponseList getByCategory(String category) {
+        List<ProductResponse> list = new ArrayList<>();
 
         List<Product> products = productRepository.findAll();
 
@@ -68,15 +69,17 @@ public class ProductQueryServiceImpl implements ProductQueryService{
             }
         });
 
+
+
         if(list.isEmpty()){
             throw new NoProductFound("No products in this category found");
         }else{
-            return list;
+            return new ProductResponseList(list, list.size() + " products have been found in this category");
         }
     }
 
     @Override
-    public CreateProductResponse findByName(String productName) {
+    public ProductResponse findByName(String productName) {
 
         Product product = productRepository.findByName(productName)
                 .orElseThrow(() -> new NoProductFound("No product with this name found"));

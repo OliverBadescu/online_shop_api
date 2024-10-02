@@ -1,12 +1,12 @@
-package mycode.online_shop_api.app.Customers.service;
+package mycode.online_shop_api.app.customers.service;
 
-import mycode.online_shop_api.app.Customers.dtos.CreateCustomerRequest;
-import mycode.online_shop_api.app.Customers.dtos.CreateCustomerResponse;
-import mycode.online_shop_api.app.Customers.dtos.CreateCustomerUpdateRequest;
-import mycode.online_shop_api.app.Customers.exceptions.EmailAlreadyExists;
-import mycode.online_shop_api.app.Customers.exceptions.NoCustomerFound;
-import mycode.online_shop_api.app.Customers.model.Customer;
-import mycode.online_shop_api.app.Customers.repository.CustomerRepository;
+import mycode.online_shop_api.app.customers.dtos.CreateCustomerRequest;
+import mycode.online_shop_api.app.customers.dtos.CustomerResponse;
+import mycode.online_shop_api.app.customers.dtos.CreateCustomerUpdateRequest;
+import mycode.online_shop_api.app.customers.exceptions.EmailAlreadyExists;
+import mycode.online_shop_api.app.customers.exceptions.NoCustomerFound;
+import mycode.online_shop_api.app.customers.model.Customer;
+import mycode.online_shop_api.app.customers.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public class CustomerCommandServiceImpl implements CustomerCommandService{
     }
 
 
-    public CreateCustomerResponse addCustomer(CreateCustomerRequest customer){
+    public CustomerResponse addCustomer(CreateCustomerRequest customer){
 
 
         List<Customer> list = customerRepository.findAll();
@@ -48,7 +48,7 @@ public class CustomerCommandServiceImpl implements CustomerCommandService{
 
         Customer customerNew = Customer.builder().fullName(customer.fullName()).billingAddress(customer.billingAddress()).country(customer.country()).email(customer.email()).password(customer.password()).phone(customer.phone()).shippingAddress(customer.shippingAddress()).build();
         customerRepository.saveAndFlush(customerNew);
-        return new CreateCustomerResponse(customerNew.getId(),customerNew.getFullName(),customerNew.getEmail(),customerNew.getPassword(),customerNew.getBillingAddress(),customerNew.getShippingAddress(),customerNew.getPhone(),customerNew.getCountry());
+        return new CustomerResponse(customerNew.getId(),customerNew.getFullName(),customerNew.getEmail(),customerNew.getPassword(),customerNew.getBillingAddress(),customerNew.getShippingAddress(),customerNew.getPhone(),customerNew.getCountry());
 
     }
 

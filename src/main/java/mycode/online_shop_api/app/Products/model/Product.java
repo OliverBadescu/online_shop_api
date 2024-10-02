@@ -1,4 +1,4 @@
-package mycode.online_shop_api.app.Products.model;
+package mycode.online_shop_api.app.products.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -7,8 +7,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
-import mycode.online_shop_api.app.OrderDetails.model.OrderDetails;
-import mycode.online_shop_api.app.ProductCategories.model.ProductCategories;
+import mycode.online_shop_api.app.orderDetails.model.OrderDetails;
+import mycode.online_shop_api.app.productCategories.model.ProductCategories;
 
 import java.io.Serializable;
 import java.time.LocalDate;

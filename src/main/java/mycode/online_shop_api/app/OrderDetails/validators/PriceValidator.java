@@ -1,10 +1,10 @@
-package mycode.online_shop_api.app.OrderDetails.validators;
+package mycode.online_shop_api.app.orderDetails.validators;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import mycode.online_shop_api.app.Products.validator.QuantityConstraint;
+import mycode.online_shop_api.app.products.validator.QuantityConstraint;
 
-public class PriceValidator implements ConstraintValidator<mycode.online_shop_api.app.Products.validator.QuantityConstraint,Double> {
+public class PriceValidator implements ConstraintValidator<mycode.online_shop_api.app.products.validator.QuantityConstraint,Double> {
     @Override
     public void initialize(QuantityConstraint constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);

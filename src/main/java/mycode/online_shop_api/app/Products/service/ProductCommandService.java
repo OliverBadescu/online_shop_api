@@ -1,14 +1,14 @@
-package mycode.online_shop_api.app.Products.service;
+package mycode.online_shop_api.app.products.service;
 
-import mycode.online_shop_api.app.Products.dto.CreateProductRequest;
-import mycode.online_shop_api.app.Products.dto.CreateProductResponse;
-import mycode.online_shop_api.app.Products.dto.UpdateProductRequest;
+import mycode.online_shop_api.app.products.dto.CreateProductRequest;
+import mycode.online_shop_api.app.products.dto.ProductResponse;
+import mycode.online_shop_api.app.products.dto.UpdateProductRequest;
 
 public interface ProductCommandService {
 
-    CreateProductResponse addProduct(CreateProductRequest createProductRequest);
+    ProductResponse addProduct(CreateProductRequest createProductRequest);
 
-    CreateProductResponse deleteProduct(int id);
+    ProductResponse deleteProduct(int id);
 
     void updateProductPut(int id, UpdateProductRequest updateProductRequest);
 

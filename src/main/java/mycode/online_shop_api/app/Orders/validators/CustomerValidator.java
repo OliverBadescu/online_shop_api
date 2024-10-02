@@ -1,9 +1,9 @@
-package mycode.online_shop_api.app.Orders.validators;
+package mycode.online_shop_api.app.orders.validators;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import mycode.online_shop_api.app.Customers.model.Customer;
-import mycode.online_shop_api.app.Products.validator.NameConstraint;
+import mycode.online_shop_api.app.customers.model.Customer;
+import mycode.online_shop_api.app.products.validator.NameConstraint;
 
 public class CustomerValidator implements ConstraintValidator<NameConstraint, Customer> {
     @Override

@@ -1,10 +1,10 @@
-package mycode.online_shop_api.app.OrderDetails.service;
+package mycode.online_shop_api.app.orderDetails.service;
 
 import lombok.AllArgsConstructor;
-import mycode.online_shop_api.app.OrderDetails.repository.OrderDetailsRepository;
-import mycode.online_shop_api.app.Products.dto.CreateProductResponse;
-import mycode.online_shop_api.app.Products.model.Product;
-import mycode.online_shop_api.app.Products.repository.ProductRepository;
+import mycode.online_shop_api.app.orderDetails.repository.OrderDetailsRepository;
+import mycode.online_shop_api.app.products.dto.ProductResponse;
+import mycode.online_shop_api.app.products.model.Product;
+import mycode.online_shop_api.app.products.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,12 +19,12 @@ public class OrderDetailsQueryServiceImpl implements OrderDetailsQueryService {
     private ProductRepository productRepository;
 
     @Override
-    public CreateProductResponse mostSoldProduct() {
+    public ProductResponse mostSoldProduct() {
         List<Integer> list = orderDetailsRepository.mostSoldProduct();
 
         Optional<Product> product = productRepository.findById(list.get(0));
 
-        return CreateProductResponse.builder()
+        return ProductResponse.builder()
                 .category(product.get().getCategory())
                 .createDate(product.get().getCreateDate())
                 .id(product.get().getId())

@@ -1,6 +1,4 @@
-package mycode.online_shop_api.app.Products.dto;
-
-import java.time.LocalDate;
+package mycode.online_shop_api.app.products.dto;
 
 public record UpdateProductRequest (
         String category,

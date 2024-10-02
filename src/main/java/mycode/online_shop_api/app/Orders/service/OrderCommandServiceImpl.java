@@ -1,25 +1,26 @@
-package mycode.online_shop_api.app.Orders.service;
+package mycode.online_shop_api.app.orders.service;
 
 import lombok.AllArgsConstructor;
-import mycode.online_shop_api.app.Customers.exceptions.NoCustomerFound;
-import mycode.online_shop_api.app.Customers.mapper.CustomerMapper;
-import mycode.online_shop_api.app.Customers.model.Customer;
-import mycode.online_shop_api.app.Customers.repository.CustomerRepository;
-import mycode.online_shop_api.app.OrderDetails.exceptions.NoOrderDetailsFound;
-import mycode.online_shop_api.app.OrderDetails.model.OrderDetails;
-import mycode.online_shop_api.app.OrderDetails.repository.OrderDetailsRepository;
-import mycode.online_shop_api.app.Orders.dtos.CreateOrderRequest;
-import mycode.online_shop_api.app.Orders.dtos.CreateOrderResponse;
-import mycode.online_shop_api.app.Orders.dtos.CreateOrderUpdateRequest;
-import mycode.online_shop_api.app.Orders.dtos.EditOrderRequest;
-import mycode.online_shop_api.app.Orders.exceptions.NoOrderFound;
-import mycode.online_shop_api.app.Orders.mappers.OrderMapper;
-import mycode.online_shop_api.app.Orders.model.Order;
-import mycode.online_shop_api.app.Orders.repository.OrderRepository;
-import mycode.online_shop_api.app.Products.dto.ProductDto;
-import mycode.online_shop_api.app.Products.exceptions.NoProductFound;
-import mycode.online_shop_api.app.Products.model.Product;
-import mycode.online_shop_api.app.Products.repository.ProductRepository;
+
+import mycode.online_shop_api.app.customers.exceptions.NoCustomerFound;
+import mycode.online_shop_api.app.customers.mapper.CustomerMapper;
+import mycode.online_shop_api.app.customers.model.Customer;
+import mycode.online_shop_api.app.customers.repository.CustomerRepository;
+import mycode.online_shop_api.app.orderDetails.exceptions.NoOrderDetailsFound;
+import mycode.online_shop_api.app.orderDetails.model.OrderDetails;
+import mycode.online_shop_api.app.orderDetails.repository.OrderDetailsRepository;
+import mycode.online_shop_api.app.orders.dtos.CreateOrderRequest;
+import mycode.online_shop_api.app.orders.dtos.CreateOrderUpdateRequest;
+import mycode.online_shop_api.app.orders.dtos.EditOrderRequest;
+import mycode.online_shop_api.app.orders.dtos.OrderResponse;
+import mycode.online_shop_api.app.orders.exceptions.NoOrderFound;
+import mycode.online_shop_api.app.orders.mappers.OrderMapper;
+import mycode.online_shop_api.app.orders.model.Order;
+import mycode.online_shop_api.app.orders.repository.OrderRepository;
+import mycode.online_shop_api.app.products.dto.ProductDto;
+import mycode.online_shop_api.app.products.exceptions.NoProductFound;
+import mycode.online_shop_api.app.products.model.Product;
+import mycode.online_shop_api.app.products.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,7 +29,7 @@ import java.util.Set;
 
 @AllArgsConstructor
 @Service
-public class OrderCommandServiceImpl implements OrderCommandService{
+public class OrderCommandServiceImpl implements OrderCommandService {
 
     private OrderRepository orderRepository;
     private OrderDetailsRepository orderDetailsRepository;
@@ -39,7 +40,7 @@ public class OrderCommandServiceImpl implements OrderCommandService{
 
 
     @Override
-    public CreateOrderResponse addOrder(CreateOrderRequest createOrderRequest) {
+    public OrderResponse addOrder(CreateOrderRequest createOrderRequest) {
         List<ProductDto> list = createOrderRequest.list();
 
         Order order = OrderMapper.requestDtoToOrder(createOrderRequest);
@@ -67,7 +68,7 @@ public class OrderCommandServiceImpl implements OrderCommandService{
         order.setAmount(sum);
         orderRepository.saveAndFlush(order);
 
-        return CreateOrderResponse.builder()
+        return OrderResponse.builder()
                 .id(order.getId())
                 .orderEmail(order.getOrderEmail())
                 .shippingAddress(order.getShippingAddress())
@@ -80,13 +81,13 @@ public class OrderCommandServiceImpl implements OrderCommandService{
     }
 
     @Override
-    public CreateOrderResponse deleteOrder(int id) {
-        Optional<Order> order = orderRepository.findById(Integer.valueOf(id));
 
+    public OrderResponse deleteOrder(int id) {
+        Optional<Order> order = orderRepository.findById(id);
         if(order.isPresent()){
-            CreateOrderResponse createOrderResponse = new CreateOrderResponse(order.get().getId(), order.get().getOrderEmail(),order.get().getShippingAddress(),order.get().getOrderAddress(),order.get().getOrderDate(),order.get().getAmount(),order.get().getOrderStatus(), CustomerMapper.customerToDto(order.get().getCustomer()));
+            OrderResponse orderResponse = new OrderResponse(order.get().getId(), order.get().getOrderEmail(),order.get().getShippingAddress(),order.get().getOrderAddress(),order.get().getOrderDate(),order.get().getAmount(),order.get().getOrderStatus(), CustomerMapper.customerToDto(order.get().getCustomer()));
             orderRepository.delete(order.get());
-            return createOrderResponse;
+            return orderResponse;
         }else{
             throw new NoOrderFound(" ");
         }
@@ -114,7 +115,7 @@ public class OrderCommandServiceImpl implements OrderCommandService{
     }
 
     @Override
-    public CreateOrderResponse deleteProductFromOrder(int orderId, EditOrderRequest editOrderRequest) {
+    public OrderResponse deleteProductFromOrder(int orderId, EditOrderRequest editOrderRequest) {
         Product product = productRepository.findByName(editOrderRequest.productName())
                 .orElseThrow(() -> new NoProductFound("No product with this name found"));
 
@@ -138,7 +139,7 @@ public class OrderCommandServiceImpl implements OrderCommandService{
     }
 
     @Override
-    public CreateOrderResponse updateProductQuantity(int orderId, EditOrderRequest editOrderRequest) {
+    public OrderResponse updateProductQuantity(int orderId, EditOrderRequest editOrderRequest) {
         Product product = productRepository.findByName(editOrderRequest.productName())
                 .orElseThrow(() -> new NoProductFound("No product with this name found"));
 
@@ -170,7 +171,7 @@ public class OrderCommandServiceImpl implements OrderCommandService{
 
 
     @Override
-    public CreateOrderResponse cancelOrder(int orderId) {
+    public OrderResponse cancelOrder(int orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new NoOrderFound("No order with this ID found"));
 

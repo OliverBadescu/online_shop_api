@@ -1,24 +1,25 @@
-package mycode.online_shop_api.app.Orders.service;
+package mycode.online_shop_api.app.orders.service;
 
-import mycode.online_shop_api.app.Orders.dtos.CreateOrderRequest;
-import mycode.online_shop_api.app.Orders.dtos.CreateOrderResponse;
-import mycode.online_shop_api.app.Orders.dtos.CreateOrderUpdateRequest;
-import mycode.online_shop_api.app.Orders.dtos.EditOrderRequest;
-import mycode.online_shop_api.app.Products.dto.ProductDto;
+
+
+import mycode.online_shop_api.app.orders.dtos.CreateOrderRequest;
+import mycode.online_shop_api.app.orders.dtos.CreateOrderUpdateRequest;
+import mycode.online_shop_api.app.orders.dtos.EditOrderRequest;
+import mycode.online_shop_api.app.orders.dtos.OrderResponse;
 
 import java.util.ArrayList;
 
 public interface OrderCommandService {
 
-    CreateOrderResponse addOrder(CreateOrderRequest createOrderRequest);
+    OrderResponse addOrder(CreateOrderRequest createOrderRequest);
 
-    CreateOrderResponse deleteOrder(int id);
+    OrderResponse deleteOrder(int id);
 
     void updateOrder(int id, CreateOrderUpdateRequest createOrderUpdateRequest);
 
-    CreateOrderResponse deleteProductFromOrder(int orderId, EditOrderRequest editOrderRequest);
+    OrderResponse deleteProductFromOrder(int orderId, EditOrderRequest editOrderRequest);
 
-    CreateOrderResponse updateProductQuantity(int orderId, EditOrderRequest editOrderRequest);
+    OrderResponse updateProductQuantity(int orderId, EditOrderRequest editOrderRequest);
 
-    CreateOrderResponse cancelOrder(int orderId);
+    OrderResponse cancelOrder(int orderId);
 }

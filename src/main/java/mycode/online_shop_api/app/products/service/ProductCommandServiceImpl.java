@@ -1,6 +1,11 @@
 package mycode.online_shop_api.app.products.service;
 
 import lombok.AllArgsConstructor;
+import mycode.online_shop_api.app.categories.exceptions.NoCategoryFound;
+import mycode.online_shop_api.app.categories.model.Category;
+import mycode.online_shop_api.app.categories.repository.CategoryRepository;
+import mycode.online_shop_api.app.productCategories.model.ProductCategories;
+import mycode.online_shop_api.app.productCategories.repository.ProductCategoriesRepository;
 import mycode.online_shop_api.app.products.dto.CreateProductRequest;
 import mycode.online_shop_api.app.products.dto.ProductResponse;
 import mycode.online_shop_api.app.products.dto.UpdateProductRequest;
@@ -18,12 +23,21 @@ import java.util.function.Predicate;
 public class ProductCommandServiceImpl implements ProductCommandService{
 
     private ProductRepository productRepository;
+    private CategoryRepository categoryRepository;
+    private ProductCategoriesRepository productCategoriesRepository;
 
     @Override
     public ProductResponse addProduct(CreateProductRequest createProductRequest) {
         Product product = Product.builder().name(createProductRequest.name()).category(createProductRequest.category()).createDate(createProductRequest.createDate()).descriptions(createProductRequest.description()).price(createProductRequest.price()).stock(createProductRequest.stock()).weight(createProductRequest.weight()).build();
+        Category category = categoryRepository.findByName(product.getCategory())
+                        .orElseThrow(() -> new NoCategoryFound("No category with this name found"));
 
         productRepository.saveAndFlush(product);
+        ProductCategories productCategories = ProductCategories.builder().product(product).category(category).build();
+
+        productCategoriesRepository.saveAndFlush(productCategories);
+
+
 
         return new ProductResponse(product.getId(),product.getCategory(), product.getCreateDate(),product.getDescriptions(), product.getName(), product.getPrice(),product.getStock(),product.getWeight());
 

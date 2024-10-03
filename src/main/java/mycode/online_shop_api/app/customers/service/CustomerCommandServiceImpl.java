@@ -1,8 +1,8 @@
 package mycode.online_shop_api.app.customers.service;
 
 import mycode.online_shop_api.app.customers.dtos.CreateCustomerRequest;
-import mycode.online_shop_api.app.customers.dtos.CustomerResponse;
 import mycode.online_shop_api.app.customers.dtos.CreateCustomerUpdateRequest;
+import mycode.online_shop_api.app.customers.dtos.CustomerResponse;
 import mycode.online_shop_api.app.customers.exceptions.EmailAlreadyExists;
 import mycode.online_shop_api.app.customers.exceptions.NoCustomerFound;
 import mycode.online_shop_api.app.customers.model.Customer;

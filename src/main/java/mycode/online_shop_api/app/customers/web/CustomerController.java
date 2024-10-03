@@ -4,12 +4,12 @@ package mycode.online_shop_api.app.customers.web;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
-
 import mycode.online_shop_api.app.customers.dtos.CreateCustomerRequest;
 import mycode.online_shop_api.app.customers.dtos.CreateCustomerUpdateRequest;
 import mycode.online_shop_api.app.customers.dtos.CustomerResponse;
 import mycode.online_shop_api.app.customers.service.CustomerCommandService;
 import mycode.online_shop_api.app.customers.service.CustomerQueryService;
+import mycode.online_shop_api.app.orders.dtos.OrderResponse;
 import mycode.online_shop_api.app.orders.service.OrderQueryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +35,7 @@ public class CustomerController {
     }
 
     @GetMapping(path = "/orders/{customerId}")
-    public ResponseEntity<List<mycode.online_shop_api.app.orders.dtos.OrderResponse>> getCustomerOrders(@PathVariable int customerId){
+    public ResponseEntity<List<OrderResponse>> getCustomerOrders(@PathVariable int customerId){
         return new  ResponseEntity<>(orderQueryService.customerOrders(customerId), HttpStatus.ACCEPTED);
     }
 
@@ -56,8 +56,8 @@ public class CustomerController {
     public ResponseEntity<CustomerResponse> updateCustomer(@PathVariable int customerId, @Valid @RequestBody CreateCustomerUpdateRequest createCustomerUpdateRequest){
 
         customerCommandService.updateCustomer(createCustomerUpdateRequest, customerId);
-        CustomerResponse customerResponse = customerQueryService.findById(customerId);
-        return new ResponseEntity<>(customerResponse, HttpStatus.ACCEPTED);
+        CustomerResponse createCustomerResponse = customerQueryService.findById(customerId);
+        return new ResponseEntity<>(createCustomerResponse, HttpStatus.ACCEPTED);
 
     }
 

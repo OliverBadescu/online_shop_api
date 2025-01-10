@@ -12,6 +12,6 @@ import java.util.Optional;
 public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     @EntityGraph(attributePaths = {"orderDetails"}, type = EntityGraph.EntityGraphType.FETCH)
-    @Query("SELECT co FROM Order co LEFT JOIN co.customer c WHERE c.id = :customerId")
-    Optional<List<Order>> getAllCustomerOrders(int customerId);
+    @Query("SELECT co FROM Order co LEFT JOIN co.user c WHERE c.id = :userId")
+    Optional<List<Order>> getAllUserOrders(int userId);
 }

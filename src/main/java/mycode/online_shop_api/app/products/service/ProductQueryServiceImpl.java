@@ -74,7 +74,7 @@ public class ProductQueryServiceImpl implements ProductQueryService{
         if(list.isEmpty()){
             throw new NoProductFound("No products in this category found");
         }else{
-            return new ProductResponseList(list, list.size() + " products have been found in this category");
+            return new ProductResponseList(list);
         }
     }
 

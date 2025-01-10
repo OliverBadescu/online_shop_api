@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public interface OrderCommandService {
 
-    OrderResponse addOrder(CreateOrderRequest createOrderRequest);
+    OrderResponse addOrder( int customerId,CreateOrderRequest createOrderRequest);
 
     OrderResponse deleteOrder(int id);
 

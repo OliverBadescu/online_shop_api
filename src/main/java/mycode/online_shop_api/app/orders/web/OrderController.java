@@ -27,10 +27,10 @@ public class OrderController {
 
     }
 
-    @PostMapping
-    public ResponseEntity<OrderResponse> createOrder(@RequestBody CreateOrderRequest createOrderRequest){
+    @PostMapping("/{customerId}")
+    public ResponseEntity<OrderResponse> createOrder(@PathVariable int customerId,@RequestBody CreateOrderRequest createOrderRequest){
 
-        return new ResponseEntity<>(orderCommandService.addOrder(createOrderRequest), HttpStatus.CREATED);
+        return new ResponseEntity<>(orderCommandService.addOrder(customerId, createOrderRequest), HttpStatus.CREATED);
 
     }
 

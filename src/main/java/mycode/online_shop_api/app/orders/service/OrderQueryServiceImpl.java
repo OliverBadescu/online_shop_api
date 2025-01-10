@@ -2,15 +2,15 @@ package mycode.online_shop_api.app.orders.service;
 
 import lombok.AllArgsConstructor;
 
-import mycode.online_shop_api.app.customers.exceptions.NoCustomerFound;
-import mycode.online_shop_api.app.customers.mapper.CustomerMapper;
-import mycode.online_shop_api.app.customers.model.Customer;
-import mycode.online_shop_api.app.customers.repository.CustomerRepository;
 import mycode.online_shop_api.app.orders.dtos.OrderResponse;
 import mycode.online_shop_api.app.orders.exceptions.NoOrderFound;
 import mycode.online_shop_api.app.orders.mappers.OrderMapper;
 import mycode.online_shop_api.app.orders.model.Order;
 import mycode.online_shop_api.app.orders.repository.OrderRepository;
+import mycode.online_shop_api.app.users.exceptions.NoUserFound;
+import mycode.online_shop_api.app.users.mapper.UserMapper;
+import mycode.online_shop_api.app.users.model.User;
+import mycode.online_shop_api.app.users.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import java.util.Optional;
 public class OrderQueryServiceImpl implements OrderQueryService{
 
     private OrderRepository orderRepository;
-    private CustomerRepository customerRepository;
+    private UserRepository userRepository;
 
 
     @Override
@@ -30,7 +30,7 @@ public class OrderQueryServiceImpl implements OrderQueryService{
         Optional<Order> order = orderRepository.findById(id);
 
         if(order.isPresent()){
-            return new OrderResponse(order.get().getId(),order.get().getOrderEmail(),order.get().getShippingAddress(),order.get().getOrderAddress(),order.get().getOrderDate(),order.get().getAmount(),order.get().getOrderStatus(), CustomerMapper.customerToDto(order.get().getCustomer()));
+            return new OrderResponse(order.get().getId(),order.get().getOrderEmail(),order.get().getShippingAddress(),order.get().getOrderAddress(),order.get().getOrderDate(),order.get().getAmount(),order.get().getOrderStatus(), UserMapper.userToResponseDto(order.get().getUser()));
 
         }else{
             throw new NoOrderFound(" ");
@@ -38,19 +38,19 @@ public class OrderQueryServiceImpl implements OrderQueryService{
     }
 
     @Override
-    public List<OrderResponse> customerOrders(int customerId) {
-        Optional<List<Order>> list = orderRepository.getAllCustomerOrders(customerId);
-        Optional<Customer> customer = customerRepository.findById(customerId);
+    public List<OrderResponse> customerOrders(int userId) {
+        Optional<List<Order>> list = orderRepository.getAllUserOrders(userId);
+        Optional<User> user = userRepository.findById(userId);
         List<OrderResponse> rez = new ArrayList<>();
 
-        if(customer.isPresent()){
+        if(user.isPresent()){
             list.get().forEach(list1 -> {
                 rez.add(OrderMapper.orderToResponseDto(list1));
             });
 
             return rez;
         }else{
-            throw new NoCustomerFound("No customer with this id found");
+            throw new NoUserFound("No customer with this id found");
         }
 
     }

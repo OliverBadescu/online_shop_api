@@ -1,7 +1,8 @@
 package mycode.online_shop_api.app.orders.dtos;
 
 import lombok.Builder;
-import mycode.online_shop_api.app.customers.dtos.CustomerResponse;
+import mycode.online_shop_api.app.users.dtos.UserResponse;
+
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -14,5 +15,5 @@ public record OrderResponse(int id,
                             LocalDate orderDate,
                             double amount,
                             String orderStatus,
-                            CustomerResponse customer) implements Serializable {
+                            UserResponse user) implements Serializable {
 }

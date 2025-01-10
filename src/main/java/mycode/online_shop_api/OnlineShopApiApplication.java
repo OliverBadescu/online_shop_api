@@ -1,18 +1,11 @@
 package mycode.online_shop_api;
 
-import jakarta.validation.Validator;
-import mycode.online_shop_api.app.customers.repository.CustomerRepository;
-import mycode.online_shop_api.app.customers.service.CustomerQueryService;
-import mycode.online_shop_api.app.orderDetails.repository.OrderDetailsRepository;
-import mycode.online_shop_api.app.orderDetails.service.OrderDetailsCommandService;
-import mycode.online_shop_api.app.orders.repository.OrderRepository;
-import mycode.online_shop_api.app.orders.service.OrderCommandService;
-import mycode.online_shop_api.app.products.repository.ProductRepository;
-import mycode.online_shop_api.app.products.service.ProductQueryService;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
 public class OnlineShopApiApplication {
@@ -22,12 +15,16 @@ public class OnlineShopApiApplication {
     }
 
     @Bean
-    CommandLineRunner commandLineRunner(OrderRepository orderRepository, OrderCommandService orderCommandService, CustomerQueryService customerQueryService, ProductQueryService productQueryService, OrderDetailsCommandService orderDetailsCommandService, ProductRepository productRepository, Validator validator, CustomerRepository customerRepository, OrderDetailsRepository orderDetailsRepository){
+    CommandLineRunner commandLineRunner() {
 
         return args -> {
 
-
         };
+    }
+
+    @Bean
+    BCryptPasswordEncoder bCryptPasswordEncoder(){
+        return  new BCryptPasswordEncoder();
     }
 
 }

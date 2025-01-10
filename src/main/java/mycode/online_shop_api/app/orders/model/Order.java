@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
-import mycode.online_shop_api.app.customers.model.Customer;
 import mycode.online_shop_api.app.orderDetails.model.OrderDetails;
+import mycode.online_shop_api.app.users.model.User;
 
-import java.io.Serializable;
+
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Objects;
@@ -22,7 +22,7 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @ToString(exclude = "orderDetails")
 @Entity
 @Table(name = "customer_order")
-public class Order implements Serializable {
+public class Order{
 
     @Id
     @SequenceGenerator(
@@ -38,9 +38,9 @@ public class Order implements Serializable {
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     @JsonBackReference
-    private Customer customer;
+    private User user;
 
     @Column(name = "amount", nullable = false)
     private double amount;
@@ -79,11 +79,11 @@ public class Order implements Serializable {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return id == order.id && Objects.equals(customer, order.customer);
+        return id == order.id && Objects.equals(user, order.user);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, customer);
+        return Objects.hash(id, user);
     }
 }

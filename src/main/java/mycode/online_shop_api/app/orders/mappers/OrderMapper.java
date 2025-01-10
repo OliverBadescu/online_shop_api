@@ -1,9 +1,11 @@
 package mycode.online_shop_api.app.orders.mappers;
 
-import mycode.online_shop_api.app.customers.mapper.CustomerMapper;
+
 import mycode.online_shop_api.app.orders.dtos.CreateOrderRequest;
 import mycode.online_shop_api.app.orders.dtos.OrderResponse;
 import mycode.online_shop_api.app.orders.model.Order;
+import mycode.online_shop_api.app.users.mapper.UserMapper;
+import mycode.online_shop_api.app.users.model.User;
 
 public class OrderMapper {
 
@@ -16,33 +18,10 @@ public class OrderMapper {
                 order.getOrderDate(),
                 order.getAmount(),
                 order.getOrderStatus(),
-                CustomerMapper.customerToDto(order.getCustomer())
+                UserMapper.userToResponseDto(order.getUser())
         );
     }
 
-    public static Order responseDtoToOrder(OrderResponse dto) {
-        return Order.builder()
-                .amount(dto.amount())
-                .customer(CustomerMapper.dtoToCustomer(dto.customer()))
-                .orderAddress(dto.orderAddress())
-                .orderDate(dto.orderDate())
-                .orderEmail(dto.orderEmail())
-                .orderStatus(dto.orderStatus())
-                .shippingAddress(dto.shippingAddress())
-                .build();
-    }
-
-    public static Order requestDtoToOrder(CreateOrderRequest dto){
-
-        return Order.builder()
-                .orderEmail(dto.orderEmail())
-                .shippingAddress(dto.shippingAddress())
-                .orderAddress(dto.orderAddress())
-                .orderDate(dto.orderDate())
-                .orderStatus("PENDING")
-                .build();
-
-    }
 
 
 }

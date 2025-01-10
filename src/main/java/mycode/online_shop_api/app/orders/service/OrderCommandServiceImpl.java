@@ -2,10 +2,7 @@ package mycode.online_shop_api.app.orders.service;
 
 import lombok.AllArgsConstructor;
 
-import mycode.online_shop_api.app.customers.exceptions.NoCustomerFound;
-import mycode.online_shop_api.app.customers.mapper.CustomerMapper;
-import mycode.online_shop_api.app.customers.model.Customer;
-import mycode.online_shop_api.app.customers.repository.CustomerRepository;
+
 import mycode.online_shop_api.app.orderDetails.exceptions.NoOrderDetailsFound;
 import mycode.online_shop_api.app.orderDetails.model.OrderDetails;
 import mycode.online_shop_api.app.orderDetails.repository.OrderDetailsRepository;
@@ -17,12 +14,20 @@ import mycode.online_shop_api.app.orders.exceptions.NoOrderFound;
 import mycode.online_shop_api.app.orders.mappers.OrderMapper;
 import mycode.online_shop_api.app.orders.model.Order;
 import mycode.online_shop_api.app.orders.repository.OrderRepository;
-import mycode.online_shop_api.app.products.dto.ProductDto;
+import mycode.online_shop_api.app.products.dto.AddProductToCartRequest;
+import mycode.online_shop_api.app.products.dto.CartDto;
+import mycode.online_shop_api.app.products.dto.ProductResponseList;
 import mycode.online_shop_api.app.products.exceptions.NoProductFound;
 import mycode.online_shop_api.app.products.model.Product;
 import mycode.online_shop_api.app.products.repository.ProductRepository;
+import mycode.online_shop_api.app.users.exceptions.NoUserFound;
+import mycode.online_shop_api.app.users.mapper.UserMapper;
+import mycode.online_shop_api.app.users.model.User;
+import mycode.online_shop_api.app.users.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -34,36 +39,44 @@ public class OrderCommandServiceImpl implements OrderCommandService {
     private OrderRepository orderRepository;
     private OrderDetailsRepository orderDetailsRepository;
     private ProductRepository productRepository;
-    private CustomerRepository customerRepository;
+    private UserRepository userRepository;
 
 
 
 
     @Override
-    public OrderResponse addOrder(CreateOrderRequest createOrderRequest) {
-        List<ProductDto> list = createOrderRequest.list();
+    public OrderResponse addOrder( int customerId ,CreateOrderRequest createOrderRequest) {
+        List<AddProductToCartRequest> list = createOrderRequest.productList();
 
-        Order order = OrderMapper.requestDtoToOrder(createOrderRequest);
-        Customer customer = customerRepository.findById(Integer.valueOf(createOrderRequest.customerId()))
-                .orElseThrow(() -> new NoCustomerFound("Customer not found"));
-        order.setCustomer(customer);
-        order.setAmount(0);
+        if (list == null || list.isEmpty()) {
+            throw new NoProductFound("Cart is empty or null");
+        }
+
+
+        User user = userRepository.findById(customerId)
+                .orElseThrow(() -> new NoUserFound("User not found"));
+        Order order = Order.builder().orderAddress(user.getBillingAddress())
+                        .shippingAddress(user.getShippingAddress())
+                        .orderDate(LocalDate.now())
+                        .orderEmail(user.getEmail()).amount(0).orderStatus("PREPARING").user(user).build();
+
         orderRepository.saveAndFlush(order);
-        double sum = list.stream()
-                .map(productDto -> {
-                    Product product = productRepository.findByName(productDto.getName())
-                            .orElseThrow(() -> new NoProductFound("Product not found: " + productDto.getName()));
-                    OrderDetails orderDetails = OrderDetails.builder()
-                            .order(order)
-                            .price(productDto.getPrice())
-                            .product(product)
-                            .quantity(productDto.getCantitate())
-                            .build();
-                    orderDetailsRepository.saveAndFlush(orderDetails);
-                    return (Double) (orderDetails.getPrice() * orderDetails.getQuantity());
-                })
-                .mapToDouble(Double::doubleValue)
-                .sum();
+
+        double sum = 0;
+
+        for (AddProductToCartRequest request : list) {
+            Product product = productRepository.findById(request.productId())
+                    .orElseThrow(() -> new NoProductFound("No product with this id found"));
+            OrderDetails orderDetails = OrderDetails.builder()
+                    .order(order)
+                    .price(product.getPrice())
+                    .product(product)
+                    .quantity(request.quantity())
+                    .build();
+
+            orderDetailsRepository.saveAndFlush(orderDetails);
+            sum += orderDetails.getPrice() * orderDetails.getQuantity();
+        }
 
         order.setAmount(sum);
         orderRepository.saveAndFlush(order);
@@ -76,16 +89,17 @@ public class OrderCommandServiceImpl implements OrderCommandService {
                 .orderDate(order.getOrderDate())
                 .amount(order.getAmount())
                 .orderStatus(order.getOrderStatus())
-                .customer(CustomerMapper.customerToDto(order.getCustomer()))
+                .user(UserMapper.userToResponseDto(order.getUser()))
                 .build();
     }
+
 
     @Override
 
     public OrderResponse deleteOrder(int id) {
         Optional<Order> order = orderRepository.findById(id);
         if(order.isPresent()){
-            OrderResponse orderResponse = new OrderResponse(order.get().getId(), order.get().getOrderEmail(),order.get().getShippingAddress(),order.get().getOrderAddress(),order.get().getOrderDate(),order.get().getAmount(),order.get().getOrderStatus(), CustomerMapper.customerToDto(order.get().getCustomer()));
+            OrderResponse orderResponse = new OrderResponse(order.get().getId(), order.get().getOrderEmail(),order.get().getShippingAddress(),order.get().getOrderAddress(),order.get().getOrderDate(),order.get().getAmount(),order.get().getOrderStatus(), UserMapper.userToResponseDto(order.get().getUser()));
             orderRepository.delete(order.get());
             return orderResponse;
         }else{
@@ -95,7 +109,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 
     @Override
     public void updateOrder(int id, CreateOrderUpdateRequest createOrderUpdateRequest) {
-        Optional<Order> order= orderRepository.findById(Integer.valueOf(id));
+        Optional<Order> order= orderRepository.findById(id);
 
         if(order.isPresent()){
             Order order1 = order.get();

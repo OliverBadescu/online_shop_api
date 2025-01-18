@@ -87,4 +87,16 @@ public class ProductQueryServiceImpl implements ProductQueryService{
 
         return ProductMapper.productToResponseDto(product);
     }
+
+    @Override
+    public ProductResponseList getAllProducts() {
+        List<Product> list = productRepository.findAll();
+
+        List<ProductResponse> responses = new ArrayList<>();
+
+        list.forEach(product -> {
+            responses.add(ProductMapper.productToResponseDto(product));
+        });
+        return new ProductResponseList(responses);
+    }
 }

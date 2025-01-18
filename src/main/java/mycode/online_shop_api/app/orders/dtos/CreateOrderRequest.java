@@ -2,7 +2,7 @@ package mycode.online_shop_api.app.orders.dtos;
 
 
 import jakarta.validation.constraints.NotNull;
-import mycode.online_shop_api.app.products.dto.AddProductToCartRequest;
+import mycode.online_shop_api.app.cart.dtos.AddProductToCartRequest;
 
 
 

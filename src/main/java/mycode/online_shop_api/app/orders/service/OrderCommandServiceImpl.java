@@ -14,9 +14,7 @@ import mycode.online_shop_api.app.orders.exceptions.NoOrderFound;
 import mycode.online_shop_api.app.orders.mappers.OrderMapper;
 import mycode.online_shop_api.app.orders.model.Order;
 import mycode.online_shop_api.app.orders.repository.OrderRepository;
-import mycode.online_shop_api.app.products.dto.AddProductToCartRequest;
-import mycode.online_shop_api.app.products.dto.CartDto;
-import mycode.online_shop_api.app.products.dto.ProductResponseList;
+import mycode.online_shop_api.app.cart.dtos.AddProductToCartRequest;
 import mycode.online_shop_api.app.products.exceptions.NoProductFound;
 import mycode.online_shop_api.app.products.model.Product;
 import mycode.online_shop_api.app.products.repository.ProductRepository;
@@ -27,7 +25,6 @@ import mycode.online_shop_api.app.users.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;

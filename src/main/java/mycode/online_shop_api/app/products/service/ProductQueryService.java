@@ -18,4 +18,6 @@ public interface ProductQueryService {
     ProductResponseList getByCategory(String category);
 
     ProductResponse findByName(String productName);
+
+    ProductResponseList getAllProducts();
 }

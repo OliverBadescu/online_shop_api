@@ -1,4 +1,4 @@
-package mycode.online_shop_api.app.products.dto;
+package mycode.online_shop_api.app.cart.dtos;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin
 @RequestMapping("/product")
 public class ProductController {
 
@@ -72,5 +73,10 @@ public class ProductController {
     public ResponseEntity<ProductResponse> findByName(@PathVariable String productName){
         return new ResponseEntity<>(productQueryService.findByName(productName), HttpStatus.ACCEPTED);
 
+    }
+
+    @GetMapping("/getAllProducts")
+    public  ResponseEntity<ProductResponseList> getAllProducts(){
+        return new ResponseEntity<>(productQueryService.getAllProducts(), HttpStatus.OK);
     }
 }

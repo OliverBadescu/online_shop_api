@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
+import mycode.online_shop_api.app.cart.model.Cart;
 import mycode.online_shop_api.app.orders.model.Order;
 import mycode.online_shop_api.app.system.security.UserRole;
 import org.springframework.security.core.GrantedAuthority;
@@ -119,6 +120,15 @@ public class User implements UserDetails {
     public void deleteOrder(Order order){
         this.orders.remove(order);
         order.setUser(null);
+    }
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private Cart cart;
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
+        cart.setUser(this);
     }
 
     public User(Long id, String fullName, String phoneNumber, String email, String password, UserRole userRole, String shippingAddress, String billingAddress) {

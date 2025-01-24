@@ -6,6 +6,7 @@ import lombok.Builder;
 @Builder
 public record AddProductToCartRequest(
         @NotNull String productName,
+        @NotNull long userId,
         @NotNull int productId,
         @NotNull int quantity
 ) {

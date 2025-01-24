@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
 import mycode.online_shop_api.app.cart.model.Cart;
+import mycode.online_shop_api.app.cart.model.CartProduct;
 import mycode.online_shop_api.app.orderDetails.model.OrderDetails;
 import mycode.online_shop_api.app.productCategories.model.ProductCategories;
 
@@ -107,8 +108,9 @@ public class Product implements Serializable {
     )
     private int stock;
 
-    @ManyToMany(mappedBy = "products")
-    private Set<Cart> carts;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<CartProduct> cartProducts = new HashSet<>();
+
 
     @OneToMany(mappedBy ="product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default

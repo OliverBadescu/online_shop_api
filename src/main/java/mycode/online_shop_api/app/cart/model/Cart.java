@@ -38,12 +38,19 @@ public class Cart {
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;
 
-    @ManyToMany
-    @JoinTable(
-            name = "cart_products",
-            joinColumns = @JoinColumn(name = "cart_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    private Set<Product> products;
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<CartProduct> cartProducts = new HashSet<>();
+
+    public void addProduct(Product product, int quantity) {
+        CartProduct cartProduct = new CartProduct();
+        cartProduct.setCart(this);
+        cartProduct.setProduct(product);
+        cartProduct.setQuantity(quantity);
+        this.cartProducts.add(cartProduct);
+    }
+
+    public void removeProduct(Product product) {
+        this.cartProducts.removeIf(cartProduct -> cartProduct.getProduct().equals(product));
+    }
 
 }

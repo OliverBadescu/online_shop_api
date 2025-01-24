@@ -7,6 +7,6 @@ public interface CartCommandService {
 
     CartResponse addProductToCart(AddProductToCartRequest cartRequest);
 
-    CartResponse deleteProductFromCart(int productId);
+    CartResponse deleteProductFromCart(int productId, int userId);
 
 }

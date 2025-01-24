@@ -18,9 +18,9 @@ public class CartQueryServiceImpl implements CartQueryService{
     UserRepository userRepository;
 
     @Override
-    public CartResponse getCardByUserId(long id) {
+    public CartResponse getCartByUserId(long id) {
         Cart cart = cartRepository.findByUserId(id)
-                .orElseThrow(() -> new NoCartFound("No cart with this found"));
+                .orElseThrow(() -> new NoCartFound("No cart with this user id found"));
 
         return CartMapper.cartToResponseDto(cart);
     }

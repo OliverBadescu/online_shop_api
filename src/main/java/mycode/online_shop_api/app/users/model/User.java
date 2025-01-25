@@ -27,6 +27,7 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @Getter
 @Setter
 @Builder
+@EqualsAndHashCode(exclude = "cart")
 @Table(name = "user")
 @Entity(name = "User")
 public class User implements UserDetails {
@@ -124,6 +125,7 @@ public class User implements UserDetails {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @ToString.Exclude
+    @JsonManagedReference
     private Cart cart;
 
     public void setCart(Cart cart) {

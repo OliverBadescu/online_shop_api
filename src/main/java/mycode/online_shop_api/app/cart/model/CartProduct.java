@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import mycode.online_shop_api.app.products.model.Product;
 
+import java.util.Objects;
+
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @AllArgsConstructor
@@ -28,6 +30,7 @@ public class CartProduct {
     )
     private Long id;
 
+    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "cart_id", referencedColumnName = "id", nullable = false)
     private Cart cart;
@@ -38,4 +41,19 @@ public class CartProduct {
 
     @Column(name = "quantity", nullable = false)
     private int quantity;
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        CartProduct cartProduct = (CartProduct) obj;
+        return Objects.equals(id, cartProduct.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
 }

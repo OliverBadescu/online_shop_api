@@ -1,6 +1,7 @@
 package mycode.online_shop_api.app.cart.mapper;
 
 import lombok.AllArgsConstructor;
+import mycode.online_shop_api.app.cart.dtos.CartProductResponse;
 import mycode.online_shop_api.app.cart.dtos.CartResponse;
 import mycode.online_shop_api.app.cart.model.Cart;
 import mycode.online_shop_api.app.products.dto.ProductResponse;
@@ -17,15 +18,21 @@ public class CartMapper{
 
     public static CartResponse cartToResponseDto(Cart cart){
 
-        List<ProductResponse> list = new ArrayList<>();
 
-        cart.getCartProducts().forEach(product -> {
-            list.add(ProductMapper.productToResponseDto(product.getProduct()));
-        });
+        List<CartProductResponse> productResponses = cart.getCartProducts().stream()
+                .map(cartProduct -> new CartProductResponse(
+                        cartProduct.getProduct().getId(),
+                        cartProduct.getProduct().getName(),
+                        cartProduct.getProduct().getCategory(),
+                        cartProduct.getProduct().getPrice(),
+                        cartProduct.getQuantity()
+                ))
+                .toList();
 
         return CartResponse.builder()
+                .id(cart.getId())
                 .userId(cart.getUser().getId())
-                .list(ProductResponseList.builder().list(list).build()).build();
+                .list(productResponses).build();
 
     }
 }

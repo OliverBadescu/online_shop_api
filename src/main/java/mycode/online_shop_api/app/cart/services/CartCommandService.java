@@ -5,8 +5,8 @@ import mycode.online_shop_api.app.cart.dtos.CartResponse;
 
 public interface CartCommandService {
 
-    CartResponse addProductToCart(AddProductToCartRequest cartRequest);
+    CartResponse addProductToCart(AddProductToCartRequest cartRequest, long userId);
 
-    CartResponse deleteProductFromCart(int productId, int userId);
+    CartResponse deleteProductFromCart(int productId, long userId);
 
 }

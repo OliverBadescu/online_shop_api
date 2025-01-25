@@ -2,15 +2,20 @@ package mycode.online_shop_api.app.cart.services;
 
 import lombok.AllArgsConstructor;
 import mycode.online_shop_api.app.cart.dtos.AddProductToCartRequest;
+import mycode.online_shop_api.app.cart.dtos.CartProductResponse;
 import mycode.online_shop_api.app.cart.dtos.CartResponse;
 import mycode.online_shop_api.app.cart.exceptions.NoCartFound;
 import mycode.online_shop_api.app.cart.mapper.CartMapper;
 import mycode.online_shop_api.app.cart.model.Cart;
+import mycode.online_shop_api.app.cart.model.CartProduct;
 import mycode.online_shop_api.app.cart.repository.CartRepository;
 import mycode.online_shop_api.app.products.exceptions.NoProductFound;
 import mycode.online_shop_api.app.products.model.Product;
 import mycode.online_shop_api.app.products.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -20,8 +25,8 @@ public class CartCommandServiceImpl implements CartCommandService{
     ProductRepository productRepository;
 
     @Override
-    public CartResponse addProductToCart(AddProductToCartRequest cartRequest) {
-        Cart cart = cartRepository.findByUserId(cartRequest.userId())
+    public CartResponse addProductToCart(AddProductToCartRequest cartRequest, long userId) {
+        Cart cart = cartRepository.findByUserId(userId)
                 .orElseThrow(() -> new NoCartFound("No cart with this user id found"));
 
 
@@ -29,12 +34,23 @@ public class CartCommandServiceImpl implements CartCommandService{
                 .orElseThrow(() -> new NoProductFound("No product with this id found"));
 
         cart.addProduct(product, cartRequest.quantity());
+        cartRepository.save(cart);
 
-        return CartMapper.cartToResponseDto(cart);
+        List<CartProductResponse> productResponses = cart.getCartProducts().stream()
+                .map(cartProduct -> new CartProductResponse(
+                        cartProduct.getProduct().getId(),
+                        cartProduct.getProduct().getName(),
+                        cartProduct.getProduct().getCategory(),
+                        cartProduct.getProduct().getPrice(),
+                        cartProduct.getQuantity()
+                ))
+                .toList();
+
+        return CartResponse.builder().userId(userId).id(cart.getId()).list(productResponses).build();
     }
 
     @Override
-    public CartResponse deleteProductFromCart(int productId, int userId) {
+    public CartResponse deleteProductFromCart(int productId, long userId) {
         Cart cart = cartRepository.findByUserId(userId)
                 .orElseThrow(() -> new NoCartFound("No cart with this user id found"));
 
@@ -43,6 +59,7 @@ public class CartCommandServiceImpl implements CartCommandService{
                 .orElseThrow(() -> new NoProductFound("No product with this id found"));
 
         cart.removeProduct(product);
+        cartRepository.save(cart);
 
         return CartMapper.cartToResponseDto(cart);
     }

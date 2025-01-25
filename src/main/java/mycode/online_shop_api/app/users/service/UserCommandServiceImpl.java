@@ -2,6 +2,8 @@ package mycode.online_shop_api.app.users.service;
 
 
 import lombok.AllArgsConstructor;
+import mycode.online_shop_api.app.cart.model.Cart;
+import mycode.online_shop_api.app.cart.repository.CartRepository;
 import mycode.online_shop_api.app.system.security.UserRole;
 import mycode.online_shop_api.app.users.dtos.CreateUserRequest;
 import mycode.online_shop_api.app.users.dtos.UpdateUserRequest;
@@ -22,6 +24,7 @@ public class UserCommandServiceImpl implements UserCommandService{
 
     private UserRepository userRepository;
     private BCryptPasswordEncoder passwordEncoder;
+    private CartRepository cartRepository;
 
 
     @Override
@@ -46,6 +49,9 @@ public class UserCommandServiceImpl implements UserCommandService{
         });
 
         userRepository.saveAndFlush(user);
+        Cart cart = Cart.builder().user(user).build();
+        cartRepository.saveAndFlush(cart);
+
 
         return UserMapper.userToResponseDto(user);
     }

@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 public class CartQueryServiceImpl implements CartQueryService{
 
     CartRepository cartRepository;
-    UserRepository userRepository;
 
     @Override
     public CartResponse getCartByUserId(long id) {

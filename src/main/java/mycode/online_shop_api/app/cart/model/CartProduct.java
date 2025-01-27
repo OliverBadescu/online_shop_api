@@ -1,8 +1,10 @@
 package mycode.online_shop_api.app.cart.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import mycode.online_shop_api.app.products.model.Product;
+import org.apache.commons.lang3.builder.ToStringExclude;
 
 import java.util.Objects;
 
@@ -35,8 +37,10 @@ public class CartProduct {
     @JoinColumn(name = "cart_id", referencedColumnName = "id", nullable = false)
     private Cart cart;
 
+    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)
+    @JsonBackReference
     private Product product;
 
     @Column(name = "quantity", nullable = false)

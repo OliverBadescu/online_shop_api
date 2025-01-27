@@ -2,6 +2,7 @@ package mycode.online_shop_api.global_exceptions;
 
 
 import mycode.online_shop_api.app.cart.exceptions.NoCartFound;
+import mycode.online_shop_api.app.products.exceptions.NoProductFound;
 import mycode.online_shop_api.app.users.exceptions.NoUserFound;
 import mycode.online_shop_api.app.users.exceptions.UserAlreadyExists;
 import org.springframework.http.HttpStatus;
@@ -16,7 +17,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handleUserNotFoundException(NoUserFound exception) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
-                .body(ErrorMessageDto.builder().message(exception.getMessage()).build());
+                .body(exception.getMessage());
     }
 
 
@@ -24,15 +25,23 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handleUserExistsException(UserAlreadyExists exception) {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ErrorMessageDto.builder().message(exception.getMessage()).build());
+                .body(exception.getMessage());
     }
 
     @ExceptionHandler({NoCartFound.class})
     public ResponseEntity<Object> handleCartNotFoundException(NoCartFound exception) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
-                .body(ErrorMessageDto.builder().message(exception.getMessage()).build());
+                .body(exception.getMessage());
     }
+
+    @ExceptionHandler({NoProductFound.class})
+    public ResponseEntity<Object> handleProductNotFoundException(NoProductFound exception) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(exception.getMessage());
+    }
+
 
 
 

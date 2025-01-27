@@ -8,6 +8,7 @@ import mycode.online_shop_api.app.cart.exceptions.NoCartFound;
 import mycode.online_shop_api.app.cart.mapper.CartMapper;
 import mycode.online_shop_api.app.cart.model.Cart;
 import mycode.online_shop_api.app.cart.model.CartProduct;
+import mycode.online_shop_api.app.cart.repository.CartProductRepository;
 import mycode.online_shop_api.app.cart.repository.CartRepository;
 import mycode.online_shop_api.app.products.exceptions.NoProductFound;
 import mycode.online_shop_api.app.products.model.Product;
@@ -15,6 +16,7 @@ import mycode.online_shop_api.app.products.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -23,6 +25,7 @@ public class CartCommandServiceImpl implements CartCommandService{
 
     CartRepository cartRepository;
     ProductRepository productRepository;
+    CartProductRepository cartProductRepository;
 
     @Override
     public CartResponse addProductToCart(AddProductToCartRequest cartRequest, long userId) {
@@ -51,16 +54,35 @@ public class CartCommandServiceImpl implements CartCommandService{
 
     @Override
     public CartResponse deleteProductFromCart(int productId, long userId) {
+
         Cart cart = cartRepository.findByUserId(userId)
                 .orElseThrow(() -> new NoCartFound("No cart with this user id found"));
-
 
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NoProductFound("No product with this id found"));
 
-        cart.removeProduct(product);
-        cartRepository.save(cart);
+        List<CartProduct> list = cartProductRepository.getAllByCart(cart)
+                .orElseThrow(() -> new NoCartFound("No products found in this cart"));
+
+        boolean productFound = false;
+
+
+        System.out.println(list.size());
+        for (CartProduct cartProduct : list) {
+            System.out.println(cartProduct);
+            if (product.getId() == cartProduct.getProduct().getId()) {
+                cart.removeProduct(product);
+                cartRepository.save(cart);
+                productFound = true;
+                break;
+            }
+        }
+
+        if (!productFound) {
+            throw new NoProductFound("No product with this id in the cart");
+        }
 
         return CartMapper.cartToResponseDto(cart);
     }
+
 }

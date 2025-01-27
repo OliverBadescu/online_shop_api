@@ -1,5 +1,6 @@
 package mycode.online_shop_api.app.products.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
@@ -11,6 +12,7 @@ import mycode.online_shop_api.app.cart.model.Cart;
 import mycode.online_shop_api.app.cart.model.CartProduct;
 import mycode.online_shop_api.app.orderDetails.model.OrderDetails;
 import mycode.online_shop_api.app.productCategories.model.ProductCategories;
+import org.apache.commons.lang3.builder.ToStringExclude;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -108,7 +110,9 @@ public class Product implements Serializable {
     )
     private int stock;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private Set<CartProduct> cartProducts = new HashSet<>();
 
 

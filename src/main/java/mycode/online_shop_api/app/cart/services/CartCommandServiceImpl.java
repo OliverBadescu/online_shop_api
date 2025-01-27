@@ -13,11 +13,12 @@ import mycode.online_shop_api.app.cart.repository.CartRepository;
 import mycode.online_shop_api.app.products.exceptions.NoProductFound;
 import mycode.online_shop_api.app.products.model.Product;
 import mycode.online_shop_api.app.products.repository.ProductRepository;
+import mycode.online_shop_api.app.users.exceptions.NoUserFound;
+import mycode.online_shop_api.app.users.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Service
@@ -26,11 +27,16 @@ public class CartCommandServiceImpl implements CartCommandService{
     CartRepository cartRepository;
     ProductRepository productRepository;
     CartProductRepository cartProductRepository;
+    UserRepository userRepository;
 
     @Override
     public CartResponse addProductToCart(AddProductToCartRequest cartRequest, long userId) {
-        Cart cart = cartRepository.findByUserId(userId)
-                .orElseThrow(() -> new NoCartFound("No cart with this user id found"));
+        Optional<Cart> cartTemp = cartRepository.findByUserId(userId);
+        Cart cart;
+
+        cart = cartTemp.orElseGet(() -> Cart.builder()
+                .user(userRepository.findById(userId).orElseThrow(() -> new NoUserFound("No user with this id found")))
+                .cartProducts(null).build());
 
 
         Product product = productRepository.findById(cartRequest.productId())

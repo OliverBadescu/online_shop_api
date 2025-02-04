@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mycode.online_shop_api.app.cart.dtos.AddProductToCartRequest;
 import mycode.online_shop_api.app.cart.dtos.CartResponse;
+import mycode.online_shop_api.app.cart.dtos.UpdateCartQuantityRequest;
 import mycode.online_shop_api.app.cart.services.CartCommandService;
 import mycode.online_shop_api.app.cart.services.CartQueryService;
 import org.springframework.http.HttpStatus;
@@ -34,5 +35,10 @@ public class CartController {
     @DeleteMapping("/deleteProductFromCart/{userId}/product/{productId}")
     public ResponseEntity<CartResponse> deleteProductFromCart(@PathVariable int userId, @PathVariable int productId) {
         return new ResponseEntity<>(cartCommandService.deleteProductFromCart(productId, userId), HttpStatus.ACCEPTED);
+    }
+
+    @PutMapping("/updateProductQuantity/{userId}/products/{productId}")
+    public ResponseEntity<CartResponse> updateProductQuantity(@PathVariable long userId, @PathVariable int productId, @RequestBody UpdateCartQuantityRequest updateCartQuantityRequest){
+        return new ResponseEntity<>(cartCommandService.updateCartQuantity(updateCartQuantityRequest,userId,productId), HttpStatus.OK);
     }
 }

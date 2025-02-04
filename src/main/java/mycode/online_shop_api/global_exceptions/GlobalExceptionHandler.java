@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({UserAlreadyExists.class})
     public ResponseEntity<Object> handleUserExistsException(UserAlreadyExists exception) {
         return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .status(HttpStatus.CONFLICT)
                 .body(exception.getMessage());
     }
 

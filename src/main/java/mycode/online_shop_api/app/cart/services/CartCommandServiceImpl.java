@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import mycode.online_shop_api.app.cart.dtos.AddProductToCartRequest;
 import mycode.online_shop_api.app.cart.dtos.CartProductResponse;
 import mycode.online_shop_api.app.cart.dtos.CartResponse;
+import mycode.online_shop_api.app.cart.dtos.UpdateCartQuantityRequest;
 import mycode.online_shop_api.app.cart.exceptions.NoCartFound;
 import mycode.online_shop_api.app.cart.mapper.CartMapper;
 import mycode.online_shop_api.app.cart.model.Cart;
@@ -14,6 +15,7 @@ import mycode.online_shop_api.app.products.exceptions.NoProductFound;
 import mycode.online_shop_api.app.products.model.Product;
 import mycode.online_shop_api.app.products.repository.ProductRepository;
 import mycode.online_shop_api.app.users.exceptions.NoUserFound;
+import mycode.online_shop_api.app.users.model.User;
 import mycode.online_shop_api.app.users.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -87,6 +89,38 @@ public class CartCommandServiceImpl implements CartCommandService{
         if (!productFound) {
             throw new NoProductFound("No product with this id in the cart");
         }
+
+        return CartMapper.cartToResponseDto(cart);
+    }
+
+    @Override
+    public CartResponse updateCartQuantity(UpdateCartQuantityRequest updateCartQuantityRequest, long userId, int productId) {
+        Cart cart = cartRepository.findByUserId(userId)
+                .orElseThrow(() -> new NoCartFound("No cart found for this user"));
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new NoProductFound("No product with this id found"));
+
+
+        List<CartProduct> cartProducts = cartProductRepository.getAllByCart(cart)
+                .orElseThrow(() -> new NoCartFound("No products found in this cart"));
+
+        boolean productFound = false;
+
+
+        for (CartProduct cartProduct : cartProducts) {
+            if (cartProduct.getProduct().getId() == productId) {
+                cartProduct.setQuantity(updateCartQuantityRequest.quantity());
+                cartProductRepository.save(cartProduct);
+                productFound = true;
+                break;
+            }
+        }
+
+        if (!productFound) {
+            throw new NoProductFound("No product with this id in the cart");
+        }
+        cartRepository.save(cart);
 
         return CartMapper.cartToResponseDto(cart);
     }

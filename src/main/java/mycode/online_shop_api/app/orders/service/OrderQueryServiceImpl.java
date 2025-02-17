@@ -3,6 +3,7 @@ package mycode.online_shop_api.app.orders.service;
 import lombok.AllArgsConstructor;
 
 import mycode.online_shop_api.app.orders.dtos.OrderResponse;
+import mycode.online_shop_api.app.orders.dtos.OrderResponseList;
 import mycode.online_shop_api.app.orders.exceptions.NoOrderFound;
 import mycode.online_shop_api.app.orders.mappers.OrderMapper;
 import mycode.online_shop_api.app.orders.model.Order;
@@ -38,7 +39,7 @@ public class OrderQueryServiceImpl implements OrderQueryService{
     }
 
     @Override
-    public List<OrderResponse> customerOrders(int userId) {
+    public OrderResponseList customerOrders(long userId) {
         Optional<List<Order>> list = orderRepository.getAllUserOrders(userId);
         Optional<User> user = userRepository.findById(userId);
         List<OrderResponse> rez = new ArrayList<>();
@@ -48,7 +49,7 @@ public class OrderQueryServiceImpl implements OrderQueryService{
                 rez.add(OrderMapper.orderToResponseDto(list1));
             });
 
-            return rez;
+            return new OrderResponseList(rez);
         }else{
             throw new NoUserFound("No customer with this id found");
         }

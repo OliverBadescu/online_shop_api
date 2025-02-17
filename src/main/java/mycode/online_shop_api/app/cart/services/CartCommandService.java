@@ -12,4 +12,6 @@ public interface CartCommandService {
 
     CartResponse updateCartQuantity(UpdateCartQuantityRequest updateCartQuantityRequest, long userId, int productId);
 
+    String emptyUserCart(long userId);
+
 }

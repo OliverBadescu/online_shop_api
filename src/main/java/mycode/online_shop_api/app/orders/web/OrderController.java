@@ -1,9 +1,11 @@
 package mycode.online_shop_api.app.orders.web;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import mycode.online_shop_api.app.orders.dtos.CreateOrderRequest;
 import mycode.online_shop_api.app.orders.dtos.OrderResponse;
 import mycode.online_shop_api.app.orders.dtos.CreateOrderUpdateRequest;
+import mycode.online_shop_api.app.orders.dtos.OrderResponseList;
 import mycode.online_shop_api.app.orders.repository.OrderRepository;
 import mycode.online_shop_api.app.orders.service.OrderCommandService;
 import mycode.online_shop_api.app.orders.service.OrderQueryService;
@@ -14,9 +16,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/order")
+@CrossOrigin
+@Slf4j
 public class OrderController {
 
-    private final OrderRepository orderRepository;
     private OrderCommandService orderCommandService;
     private OrderQueryService orderQueryService;
 
@@ -47,4 +50,9 @@ public class OrderController {
         return new ResponseEntity<>(orderQueryService.findById(orderId), HttpStatus.ACCEPTED);
     }
 
+
+    @GetMapping("getCustomerOrders/{userId}")
+    public ResponseEntity<OrderResponseList> getCustomerOrders(@PathVariable long userId){
+        return new ResponseEntity<>(orderQueryService.customerOrders(userId), HttpStatus.OK);
+    }
 }

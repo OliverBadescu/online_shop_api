@@ -41,4 +41,9 @@ public class CartController {
     public ResponseEntity<CartResponse> updateProductQuantity(@PathVariable long userId, @PathVariable int productId, @RequestBody UpdateCartQuantityRequest updateCartQuantityRequest){
         return new ResponseEntity<>(cartCommandService.updateCartQuantity(updateCartQuantityRequest,userId,productId), HttpStatus.OK);
     }
+
+    @GetMapping("/emptyUserCart/{userId}")
+    public ResponseEntity<String> emptyUserCart(@PathVariable long userId){
+        return new ResponseEntity<>(cartCommandService.emptyUserCart(userId), HttpStatus.OK);
+    }
 }

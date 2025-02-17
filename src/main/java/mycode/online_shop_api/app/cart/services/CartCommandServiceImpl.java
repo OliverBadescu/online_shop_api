@@ -125,4 +125,21 @@ public class CartCommandServiceImpl implements CartCommandService{
         return CartMapper.cartToResponseDto(cart);
     }
 
+    @Override
+    public String emptyUserCart(long userId) {
+        Cart cart = cartRepository.findByUserId(userId)
+                .orElseThrow(() -> new NoCartFound("No cart found for this user"));
+
+        List<CartProduct> cartProducts = cartProductRepository.getAllByCart(cart)
+                .orElseThrow(() -> new NoCartFound("No products found in this cart"));
+
+        cartProductRepository.deleteAll(cartProducts);
+
+        cart.getCartProducts().clear();
+
+        cartRepository.save(cart);
+
+        return "Cart for user with Id: " + userId + " deleted";
+    }
+
 }

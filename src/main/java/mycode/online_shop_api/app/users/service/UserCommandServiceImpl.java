@@ -84,8 +84,10 @@ public class UserCommandServiceImpl implements UserCommandService{
         });
         user.setEmail(up.email());
         user.setFullName(up.fullName());
-        user.setPassword(up.password());
         user.setPhone(up.phone());
+        user.setBillingAddress(up.billingAddress());
+        user.setCountry(up.country());
+        user.setShippingAddress(up.shippingAddress());
 
         userRepository.save(user);
 

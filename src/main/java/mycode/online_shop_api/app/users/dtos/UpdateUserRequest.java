@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotNull;
 
 public record UpdateUserRequest(@NotNull String fullName,
                                 @NotNull String email,
-                                @NotNull String password,
-                                @NotNull String phone) {
+                                @NotNull String phone,
+                                @NotNull String country,
+                                @NotNull String billingAddress,
+                                @NotNull String shippingAddress) {
 }

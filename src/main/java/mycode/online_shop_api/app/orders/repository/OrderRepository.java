@@ -1,6 +1,7 @@
 package mycode.online_shop_api.app.orders.repository;
 
 
+import mycode.online_shop_api.app.orders.dtos.OrderResponseList;
 import mycode.online_shop_api.app.orders.model.Order;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +15,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     @EntityGraph(attributePaths = {"orderDetails"}, type = EntityGraph.EntityGraphType.FETCH)
     @Query("SELECT co FROM Order co LEFT JOIN co.user c WHERE c.id = :userId")
     Optional<List<Order>> getAllUserOrders(long userId);
+
+
+    Optional<List<Order>> findTop10ByOrderByOrderDateDesc();
 }

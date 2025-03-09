@@ -12,6 +12,7 @@ import mycode.online_shop_api.app.users.exceptions.NoUserFound;
 import mycode.online_shop_api.app.users.mapper.UserMapper;
 import mycode.online_shop_api.app.users.model.User;
 import mycode.online_shop_api.app.users.repository.UserRepository;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -54,5 +55,16 @@ public class OrderQueryServiceImpl implements OrderQueryService{
             throw new NoUserFound("No customer with this id found");
         }
 
+    }
+
+    @Override
+    public OrderResponseList getRecentOrders() {
+        Optional<List<Order>> orders = orderRepository.findTop10ByOrderByOrderDateDesc();
+        ArrayList<OrderResponse> responses = new ArrayList<>();
+        orders.ifPresent(orderList -> orderList.forEach(order -> {
+            responses.add(OrderMapper.orderToResponseDto(order));
+        }));
+
+        return new OrderResponseList(responses);
     }
 }

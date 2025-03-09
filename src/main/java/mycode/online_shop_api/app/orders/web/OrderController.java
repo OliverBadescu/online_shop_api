@@ -9,6 +9,7 @@ import mycode.online_shop_api.app.orders.dtos.OrderResponseList;
 import mycode.online_shop_api.app.orders.repository.OrderRepository;
 import mycode.online_shop_api.app.orders.service.OrderCommandService;
 import mycode.online_shop_api.app.orders.service.OrderQueryService;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,6 +51,10 @@ public class OrderController {
         return new ResponseEntity<>(orderQueryService.findById(orderId), HttpStatus.ACCEPTED);
     }
 
+    @GetMapping("/getRecentOrders")
+    public ResponseEntity<OrderResponseList> getRecentOrders(){
+        return new ResponseEntity<>(orderQueryService.getRecentOrders(), HttpStatus.OK);
+    }
 
     @GetMapping("getCustomerOrders/{userId}")
     public ResponseEntity<OrderResponseList> getCustomerOrders(@PathVariable long userId){

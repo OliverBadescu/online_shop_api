@@ -14,5 +14,6 @@
 
         UserResponseList getMostActiveUsers();
 
+        int totalUsers();
 
     }

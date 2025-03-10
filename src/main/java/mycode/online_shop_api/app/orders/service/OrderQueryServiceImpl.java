@@ -15,9 +15,7 @@ import mycode.online_shop_api.app.users.repository.UserRepository;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -86,5 +84,19 @@ public class OrderQueryServiceImpl implements OrderQueryService{
         }
 
         return sum;
+    }
+
+    @Override
+    public Map<String, Double> getMonthlyRevenue() {
+        List<Object[]> monthlyRevenueData = orderRepository.getMonthlyRevenue();
+        Map<String, Double> monthlyRevenue = new HashMap<>();
+
+        for (Object[] data : monthlyRevenueData) {
+            String month = (String) data[0];
+            Double revenue = (Double) data[1];
+            monthlyRevenue.put(month, revenue);
+        }
+
+        return monthlyRevenue;
     }
 }

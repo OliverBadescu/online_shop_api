@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/order")
@@ -70,5 +72,10 @@ public class OrderController {
     public ResponseEntity<Double> totalRevenue(){
 
         return new ResponseEntity<>(orderQueryService.totalRevenue(), HttpStatus.OK);
+    }
+
+    @GetMapping("/monthly")
+    public ResponseEntity<Map<String, Double>> getMonthlyRevenue() {
+        return new ResponseEntity<>(orderQueryService.getMonthlyRevenue(), HttpStatus.OK);
     }
 }

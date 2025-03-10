@@ -60,4 +60,9 @@ public class UserQueryServiceImpl implements UserQueryService{
 
         return new UserResponseList(responseList);
     }
+
+    @Override
+    public int totalUsers() {
+        return userRepository.findAll().size();
+    }
 }

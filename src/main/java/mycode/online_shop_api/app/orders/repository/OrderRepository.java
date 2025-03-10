@@ -23,4 +23,27 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     @Query("SELECT o.user FROM Order o GROUP BY o.user ORDER BY COUNT(o.id) DESC")
     Optional<List<User>> findMostActiveUsers();
 
+    @Query(value = """
+    WITH months AS (
+        SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL n MONTH), '%Y-%m') AS month
+        FROM (
+            SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+            UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8
+            UNION ALL SELECT 9 UNION ALL SELECT 10 UNION ALL SELECT 11
+        ) AS numbers
+    )
+    SELECT 
+        m.month,
+        COALESCE(SUM(o.amount), 0) AS revenue
+    FROM 
+        months m
+    LEFT JOIN 
+        customer_order o ON DATE_FORMAT(o.order_date, '%Y-%m') = m.month
+    GROUP BY 
+        m.month
+    ORDER BY 
+        m.month
+""", nativeQuery = true)
+    List<Object[]> getMonthlyRevenue();
+
 }

@@ -5,6 +5,7 @@ import mycode.online_shop_api.app.orders.dtos.OrderResponseList;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Map;
 
 public interface OrderQueryService {
 
@@ -17,4 +18,6 @@ public interface OrderQueryService {
     int totalOrders();
 
     double totalRevenue();
+
+    Map<String, Double> getMonthlyRevenue();
 }

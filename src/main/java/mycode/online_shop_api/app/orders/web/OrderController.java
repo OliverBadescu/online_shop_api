@@ -60,4 +60,15 @@ public class OrderController {
     public ResponseEntity<OrderResponseList> getCustomerOrders(@PathVariable long userId){
         return new ResponseEntity<>(orderQueryService.customerOrders(userId), HttpStatus.OK);
     }
+
+    @GetMapping("/totalOrders")
+    public ResponseEntity<Integer> totalOrders(){
+        return new ResponseEntity<>(orderQueryService.totalOrders(), HttpStatus.OK);
+    }
+
+    @GetMapping("/totalRevenue")
+    public ResponseEntity<Double> totalRevenue(){
+
+        return new ResponseEntity<>(orderQueryService.totalRevenue(), HttpStatus.OK);
+    }
 }

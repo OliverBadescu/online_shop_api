@@ -2,6 +2,7 @@ package mycode.online_shop_api.app.products.web;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import mycode.online_shop_api.app.orderDetails.service.OrderDetailsQueryService;
 import mycode.online_shop_api.app.products.dto.CreateProductRequest;
 import mycode.online_shop_api.app.products.dto.ProductResponse;
 import mycode.online_shop_api.app.products.dto.ProductResponseList;
@@ -20,6 +21,7 @@ public class ProductController {
 
     private ProductQueryService productQueryService;
     private ProductCommandService productCommandService;
+    private OrderDetailsQueryService orderDetailsQueryService;
 
     @GetMapping(path = "/{productId}")
     public ResponseEntity<ProductResponse> getProduct(@PathVariable int productId){
@@ -78,5 +80,15 @@ public class ProductController {
     @GetMapping("/getAllProducts")
     public  ResponseEntity<ProductResponseList> getAllProducts(){
         return new ResponseEntity<>(productQueryService.getAllProducts(), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/mostSold")
+    public ResponseEntity<ProductResponseList> getMostSoldProduct(){
+        return new ResponseEntity<>(productQueryService.getTopSellingProducts(), HttpStatus.OK);
+    }
+
+    @GetMapping("/totalProducts")
+    public ResponseEntity<Integer> totalProducts(){
+        return new ResponseEntity<>(productQueryService.totalProducts(), HttpStatus.OK);
     }
 }

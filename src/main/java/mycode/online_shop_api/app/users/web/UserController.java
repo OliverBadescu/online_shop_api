@@ -30,6 +30,11 @@ public class UserController {
     private final JWTTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
 
+        @GetMapping("/mostActiveUsers")
+    public ResponseEntity<UserResponseList> mostActiveUsers(){
+        return new ResponseEntity<>(userQueryService.getMostActiveUsers(), HttpStatus.OK);
+    }
+
     @GetMapping(path = "/getUserById/{userId}")
     public ResponseEntity<UserResponse> getUser(@PathVariable long userId){
         return new ResponseEntity<>(userQueryService.findUserById(userId), HttpStatus.OK);

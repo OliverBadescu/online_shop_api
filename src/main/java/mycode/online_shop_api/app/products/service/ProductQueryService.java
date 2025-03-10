@@ -20,4 +20,8 @@ public interface ProductQueryService {
     ProductResponse findByName(String productName);
 
     ProductResponseList getAllProducts();
+
+    ProductResponseList getTopSellingProducts();
+
+    int totalProducts();
 }

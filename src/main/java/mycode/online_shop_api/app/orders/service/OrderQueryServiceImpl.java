@@ -23,6 +23,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class OrderQueryServiceImpl implements OrderQueryService{
 
+
     private OrderRepository orderRepository;
     private UserRepository userRepository;
 
@@ -38,6 +39,7 @@ public class OrderQueryServiceImpl implements OrderQueryService{
             throw new NoOrderFound(" ");
         }
     }
+
 
     @Override
     public OrderResponseList customerOrders(long userId) {
@@ -66,5 +68,23 @@ public class OrderQueryServiceImpl implements OrderQueryService{
         }));
 
         return new OrderResponseList(responses);
+    }
+
+    @Override
+    public int totalOrders() {
+        return orderRepository.findAll().size();
+    }
+
+    @Override
+    public double totalRevenue() {
+        List<Order> list = orderRepository.findAll();
+
+        double sum =0;
+
+        for (Order order : list) {
+            sum += order.getAmount();
+        }
+
+        return sum;
     }
 }

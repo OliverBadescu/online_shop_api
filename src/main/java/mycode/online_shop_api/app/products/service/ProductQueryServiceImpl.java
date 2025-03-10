@@ -1,5 +1,6 @@
 package mycode.online_shop_api.app.products.service;
 
+import mycode.online_shop_api.app.orderDetails.repository.OrderDetailsRepository;
 import mycode.online_shop_api.app.products.dto.ProductResponse;
 import mycode.online_shop_api.app.products.dto.ProductResponseList;
 import mycode.online_shop_api.app.products.exceptions.NoProductFound;
@@ -15,10 +16,12 @@ import java.util.Optional;
 @Service
 public class ProductQueryServiceImpl implements ProductQueryService{
 
+    private final OrderDetailsRepository orderDetailsRepository;
     private ProductRepository productRepository;
 
-    public ProductQueryServiceImpl(ProductRepository productRepository) {
+    public ProductQueryServiceImpl(ProductRepository productRepository, OrderDetailsRepository orderDetailsRepository) {
         this.productRepository = productRepository;
+        this.orderDetailsRepository = orderDetailsRepository;
     }
 
 
@@ -98,5 +101,23 @@ public class ProductQueryServiceImpl implements ProductQueryService{
             responses.add(ProductMapper.productToResponseDto(product));
         });
         return new ProductResponseList(responses);
+    }
+
+    @Override
+    public ProductResponseList getTopSellingProducts() {
+        List<Product> topSellingProducts = orderDetailsRepository.findTopSellingProducts();
+
+        List<ProductResponse> responseList = new ArrayList<>();
+
+        topSellingProducts.forEach(product -> {
+            responseList.add(ProductMapper.productToResponseDto(product));
+        });
+
+        return new ProductResponseList(responseList);
+    }
+
+    @Override
+    public int totalProducts(){
+        return productRepository.findAll().size();
     }
 }

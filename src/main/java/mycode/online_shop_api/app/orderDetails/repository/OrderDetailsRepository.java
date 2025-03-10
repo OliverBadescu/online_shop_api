@@ -3,6 +3,7 @@ package mycode.online_shop_api.app.orderDetails.repository;
 
 
 import mycode.online_shop_api.app.orderDetails.model.OrderDetails;
+import mycode.online_shop_api.app.products.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -16,5 +17,8 @@ public interface OrderDetailsRepository extends JpaRepository<OrderDetails, Inte
         List<Integer> mostSoldProduct();
 
         Optional<OrderDetails> findByOrderIdAndProductId(int orderId, int productId);
+
+        @Query("SELECT oi.product FROM OrderDetails oi GROUP BY oi.product ORDER BY SUM(oi.quantity) DESC")
+        List<Product> findTopSellingProducts();
 
 }

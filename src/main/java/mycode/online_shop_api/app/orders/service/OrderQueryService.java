@@ -13,4 +13,8 @@ public interface OrderQueryService {
     OrderResponseList customerOrders(long customerId);
 
     OrderResponseList getRecentOrders();
+
+    int totalOrders();
+
+    double totalRevenue();
 }

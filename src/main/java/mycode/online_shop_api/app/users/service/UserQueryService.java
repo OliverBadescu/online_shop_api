@@ -1,15 +1,18 @@
-package mycode.online_shop_api.app.users.service;
+    package mycode.online_shop_api.app.users.service;
 
-import mycode.online_shop_api.app.users.dtos.UserResponse;
-import mycode.online_shop_api.app.users.dtos.UserResponseList;
-import mycode.online_shop_api.app.users.model.User;
+    import mycode.online_shop_api.app.users.dtos.UserResponse;
+    import mycode.online_shop_api.app.users.dtos.UserResponseList;
+    import mycode.online_shop_api.app.users.model.User;
 
-public interface UserQueryService {
+    public interface UserQueryService {
 
-    UserResponse findUserById(long id);
+        UserResponse findUserById(long id);
 
-    UserResponseList getAllUsers();
+        UserResponseList getAllUsers();
 
-    User findByEmail(String email);
+        User findByEmail(String email);
 
-}
+        UserResponseList getMostActiveUsers();
+
+
+    }

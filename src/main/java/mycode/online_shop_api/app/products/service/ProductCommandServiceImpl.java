@@ -54,7 +54,7 @@ public class ProductCommandServiceImpl implements ProductCommandService{
             return productResponse;
 
         }else{
-            throw new NoProductFound(" ");
+            throw new NoProductFound("No product with this id found");
         }
     }
 

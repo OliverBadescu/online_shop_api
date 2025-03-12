@@ -134,7 +134,7 @@ public class Product implements Serializable {
     @OneToMany(mappedBy ="product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
         @ToString.Exclude
-    @JsonManagedReference
+    @JsonBackReference
     private Set<ProductCategories> productCategories = new HashSet<>();
 
     private void addProductCategory(ProductCategories productCategory){

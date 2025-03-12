@@ -2,6 +2,7 @@ package mycode.online_shop_api.app.productCategories.model;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import mycode.online_shop_api.app.categories.model.Category;
@@ -41,7 +42,7 @@ public class ProductCategories implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", referencedColumnName = "id")
-    @JsonBackReference
+    @JsonManagedReference
     private Product product;
 
 

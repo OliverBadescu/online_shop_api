@@ -2,6 +2,7 @@ package mycode.online_shop_api.global_exceptions;
 
 
 import mycode.online_shop_api.app.cart.exceptions.NoCartFound;
+import mycode.online_shop_api.app.categories.exceptions.NoCategoryFound;
 import mycode.online_shop_api.app.products.exceptions.NoProductFound;
 import mycode.online_shop_api.app.users.exceptions.NoUserFound;
 import mycode.online_shop_api.app.users.exceptions.UserAlreadyExists;
@@ -41,6 +42,14 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.NOT_FOUND)
                 .body(exception.getMessage());
     }
+
+    @ExceptionHandler({NoCategoryFound.class})
+    public ResponseEntity<Object> handleCategoryNotFound(NoCategoryFound exception) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(exception.getMessage());
+    }
+
 
 
 

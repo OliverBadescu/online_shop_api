@@ -2,7 +2,9 @@ package mycode.online_shop_api.app.categories.web;
 
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import mycode.online_shop_api.app.categories.dtos.CategoryResponse;
+import mycode.online_shop_api.app.categories.dtos.CategoryResponseList;
 import mycode.online_shop_api.app.categories.dtos.CreateCategoryRequest;
 import mycode.online_shop_api.app.categories.dtos.UpdateCategoryRequest;
 import mycode.online_shop_api.app.categories.service.CategoryCommandService;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/category")
+@CrossOrigin
+@Slf4j
 public class CategoryController {
 
     CategoryCommandService categoryCommandService;
@@ -43,6 +47,11 @@ public class CategoryController {
     @PutMapping(path = "/{categoryId}")
     public ResponseEntity<CategoryResponse> updateCategory(@PathVariable int categoryId, @RequestBody UpdateCategoryRequest updateCategoryRequest){
         return new ResponseEntity<>(categoryCommandService.updateCategory(categoryId, updateCategoryRequest), HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/getAll")
+    public ResponseEntity<CategoryResponseList> getAll(){
+        return new ResponseEntity<>(categoryQueryService.getAllCategories(), HttpStatus.OK);
     }
 
 }

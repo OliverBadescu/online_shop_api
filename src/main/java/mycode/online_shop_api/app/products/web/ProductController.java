@@ -21,7 +21,6 @@ public class ProductController {
 
     private ProductQueryService productQueryService;
     private ProductCommandService productCommandService;
-    private OrderDetailsQueryService orderDetailsQueryService;
 
     @GetMapping(path = "/{productId}")
     public ResponseEntity<ProductResponse> getProduct(@PathVariable int productId){
@@ -30,7 +29,7 @@ public class ProductController {
 
     }
 
-    @PostMapping
+    @PostMapping("/addProduct")
     public ResponseEntity<ProductResponse> addProduct(@RequestBody CreateProductRequest createProductRequest){
         return new ResponseEntity<>(productCommandService.addProduct(createProductRequest), HttpStatus.CREATED);
     }

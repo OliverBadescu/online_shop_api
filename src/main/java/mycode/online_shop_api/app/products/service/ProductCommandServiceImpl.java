@@ -14,6 +14,7 @@ import mycode.online_shop_api.app.products.model.Product;
 import mycode.online_shop_api.app.products.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -28,7 +29,7 @@ public class ProductCommandServiceImpl implements ProductCommandService{
 
     @Override
     public ProductResponse addProduct(CreateProductRequest createProductRequest) {
-        Product product = Product.builder().name(createProductRequest.name()).category(createProductRequest.category()).createDate(createProductRequest.createDate()).descriptions(createProductRequest.description()).price(createProductRequest.price()).stock(createProductRequest.stock()).weight(createProductRequest.weight()).build();
+        Product product = Product.builder().name(createProductRequest.name()).category(createProductRequest.category()).createDate(LocalDate.now()).descriptions(createProductRequest.description()).price(createProductRequest.price()).stock(createProductRequest.stock()).weight(createProductRequest.weight()).build();
         Category category = categoryRepository.findByName(product.getCategory())
                 .orElseThrow(() -> new NoCategoryFound("No category with this name found"));
 

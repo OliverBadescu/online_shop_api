@@ -20,4 +20,6 @@ public interface OrderQueryService {
     double totalRevenue();
 
     Map<String, Double> getMonthlyRevenue();
+
+    OrderResponseList getAllOrders();
 }

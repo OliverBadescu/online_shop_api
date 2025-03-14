@@ -99,4 +99,18 @@ public class OrderQueryServiceImpl implements OrderQueryService{
 
         return monthlyRevenue;
     }
+
+    @Override
+    public OrderResponseList getAllOrders() {
+        List<Order> list = orderRepository.findAll();
+
+        ArrayList<OrderResponse> responses = new ArrayList<>();
+
+        list.forEach(order -> {
+            responses.add(OrderMapper.orderToResponseDto(order));
+        });
+
+        return new OrderResponseList(responses);
+    }
+
 }

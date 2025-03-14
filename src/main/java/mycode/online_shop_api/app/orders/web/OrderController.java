@@ -40,13 +40,18 @@ public class OrderController {
 
     }
 
-    @DeleteMapping(path = "/{orderId}")
+    @PutMapping("/cancelOrder/{orderId}")
+    public ResponseEntity<OrderResponse> cancelOrder(@PathVariable int orderId){
+        return new ResponseEntity<>(orderCommandService.cancelOrder(orderId), HttpStatus.ACCEPTED);
+    }
+
+    @DeleteMapping(path = "/deleteOrder/{orderId}")
     public ResponseEntity<OrderResponse> deleteOrder(@PathVariable int orderId){
 
         return new ResponseEntity<>(orderCommandService.deleteOrder(orderId), HttpStatus.ACCEPTED);
     }
 
-    @PutMapping(path = "/{orderId}")
+    @PutMapping(path = "/updateOrder/{orderId}")
     public ResponseEntity<OrderResponse> updateOrder(@PathVariable int orderId, @RequestBody CreateOrderUpdateRequest createOrderUpdateRequest){
         orderCommandService.updateOrder(orderId,createOrderUpdateRequest);
 
@@ -77,5 +82,10 @@ public class OrderController {
     @GetMapping("/monthly")
     public ResponseEntity<Map<String, Double>> getMonthlyRevenue() {
         return new ResponseEntity<>(orderQueryService.getMonthlyRevenue(), HttpStatus.OK);
+    }
+
+    @GetMapping("/getAllOrders")
+    public ResponseEntity<OrderResponseList> getAllOrders(){
+        return new ResponseEntity<>(orderQueryService.getAllOrders(), HttpStatus.OK);
     }
 }

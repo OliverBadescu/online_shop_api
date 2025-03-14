@@ -113,7 +113,6 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 
             order1.setAmount(createOrderUpdateRequest.amount());
             order1.setOrderAddress(createOrderUpdateRequest.orderAddress());
-            order1.setOrderDate(createOrderUpdateRequest.orderDate());
             order1.setOrderEmail(createOrderUpdateRequest.orderEmail());
             order1.setOrderStatus(createOrderUpdateRequest.orderStatus());
             order1.setShippingAddress(createOrderUpdateRequest.shippingAddress());
@@ -193,7 +192,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
             orderDetailsRepository.delete(orderDetails);
         });
 
-        order.setOrderStatus("Cancelled");
+        order.setOrderStatus("CANCELLED");
 
 
         orderRepository.save(order);

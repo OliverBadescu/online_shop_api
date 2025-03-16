@@ -9,9 +9,7 @@ import java.util.Map;
 
 public interface OrderQueryService {
 
-    OrderResponse findById(int id);
-
-    OrderResponseList customerOrders(long customerId);
+    OrderResponseList customerOrders();
 
     OrderResponseList getRecentOrders();
 

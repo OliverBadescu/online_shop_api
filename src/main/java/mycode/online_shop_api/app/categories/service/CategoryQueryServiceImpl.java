@@ -19,17 +19,6 @@ public class CategoryQueryServiceImpl implements CategoryQueryService{
 
     private CategoryRepository categoryRepository;
 
-    @Override
-    public CategoryResponse getCategory(int categoryId) {
-        Optional<Category> category = categoryRepository.findById(categoryId);
-
-        if(category.isPresent()){
-            return new CategoryResponse(category.get().getId(),category.get().getName());
-        }else{
-            throw new NoCategoryFound("No category with this id found");
-        }
-
-    }
 
     @Override
     public CategoryResponseList getAllCategories() {

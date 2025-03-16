@@ -12,6 +12,7 @@ import mycode.online_shop_api.app.orders.service.OrderQueryService;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -26,64 +27,67 @@ public class OrderController {
     private OrderCommandService orderCommandService;
     private OrderQueryService orderQueryService;
 
-    @GetMapping(path = "/{orderId}")
-    public ResponseEntity<OrderResponse> getOrder(@PathVariable int orderId){
 
-        return new ResponseEntity<>(orderQueryService.findById(orderId), HttpStatus.OK);
 
-    }
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENT')")
+    @PostMapping("/sendOrder")
+    public ResponseEntity<OrderResponse> createOrder(@RequestBody CreateOrderRequest createOrderRequest){
 
-    @PostMapping("/{customerId}")
-    public ResponseEntity<OrderResponse> createOrder(@PathVariable int customerId,@RequestBody CreateOrderRequest createOrderRequest){
-
-        return new ResponseEntity<>(orderCommandService.addOrder(customerId, createOrderRequest), HttpStatus.CREATED);
+        return new ResponseEntity<>(orderCommandService.addOrder( createOrderRequest), HttpStatus.CREATED);
 
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENT')")
     @PutMapping("/cancelOrder/{orderId}")
     public ResponseEntity<OrderResponse> cancelOrder(@PathVariable int orderId){
         return new ResponseEntity<>(orderCommandService.cancelOrder(orderId), HttpStatus.ACCEPTED);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping(path = "/deleteOrder/{orderId}")
     public ResponseEntity<OrderResponse> deleteOrder(@PathVariable int orderId){
 
         return new ResponseEntity<>(orderCommandService.deleteOrder(orderId), HttpStatus.ACCEPTED);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping(path = "/updateOrder/{orderId}")
     public ResponseEntity<OrderResponse> updateOrder(@PathVariable int orderId, @RequestBody CreateOrderUpdateRequest createOrderUpdateRequest){
-        orderCommandService.updateOrder(orderId,createOrderUpdateRequest);
-
-        return new ResponseEntity<>(orderQueryService.findById(orderId), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(orderCommandService.updateOrder(orderId, createOrderUpdateRequest), HttpStatus.ACCEPTED);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') ")
     @GetMapping("/getRecentOrders")
     public ResponseEntity<OrderResponseList> getRecentOrders(){
         return new ResponseEntity<>(orderQueryService.getRecentOrders(), HttpStatus.OK);
     }
 
-    @GetMapping("getCustomerOrders/{userId}")
-    public ResponseEntity<OrderResponseList> getCustomerOrders(@PathVariable long userId){
-        return new ResponseEntity<>(orderQueryService.customerOrders(userId), HttpStatus.OK);
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENT')")
+    @GetMapping("getCustomerOrders")
+    public ResponseEntity<OrderResponseList> getCustomerOrders(){
+        return new ResponseEntity<>(orderQueryService.customerOrders(), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("/totalOrders")
     public ResponseEntity<Integer> totalOrders(){
         return new ResponseEntity<>(orderQueryService.totalOrders(), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("/totalRevenue")
     public ResponseEntity<Double> totalRevenue(){
 
         return new ResponseEntity<>(orderQueryService.totalRevenue(), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') ")
     @GetMapping("/monthly")
     public ResponseEntity<Map<String, Double>> getMonthlyRevenue() {
         return new ResponseEntity<>(orderQueryService.getMonthlyRevenue(), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("/getAllOrders")
     public ResponseEntity<OrderResponseList> getAllOrders(){
         return new ResponseEntity<>(orderQueryService.getAllOrders(), HttpStatus.OK);

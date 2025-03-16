@@ -11,6 +11,7 @@ import mycode.online_shop_api.app.categories.service.CategoryCommandService;
 import mycode.online_shop_api.app.categories.service.CategoryQueryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,6 +24,7 @@ public class CategoryController {
     CategoryCommandService categoryCommandService;
     CategoryQueryService categoryQueryService;
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<CategoryResponse> addCategory(@RequestBody CreateCategoryRequest createCategoryRequest){
 
@@ -30,13 +32,7 @@ public class CategoryController {
         
     }
 
-    @GetMapping(path = "/{categoryId}")
-    public ResponseEntity<CategoryResponse> getCategory(@PathVariable int categoryId){
-
-        return new ResponseEntity<>(categoryQueryService.getCategory(categoryId), HttpStatus.ACCEPTED);
-
-    }
-
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping(path = "/{categoryId}")
     public ResponseEntity<CategoryResponse> deleteCategory(@PathVariable int categoryId){
 
@@ -44,11 +40,13 @@ public class CategoryController {
 
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping(path = "/{categoryId}")
     public ResponseEntity<CategoryResponse> updateCategory(@PathVariable int categoryId, @RequestBody UpdateCategoryRequest updateCategoryRequest){
         return new ResponseEntity<>(categoryCommandService.updateCategory(categoryId, updateCategoryRequest), HttpStatus.ACCEPTED);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENT')")
     @GetMapping("/getAll")
     public ResponseEntity<CategoryResponseList> getAll(){
         return new ResponseEntity<>(categoryQueryService.getAllCategories(), HttpStatus.OK);

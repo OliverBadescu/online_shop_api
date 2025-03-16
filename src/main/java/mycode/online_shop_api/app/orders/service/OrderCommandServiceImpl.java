@@ -22,6 +22,8 @@ import mycode.online_shop_api.app.users.exceptions.NoUserFound;
 import mycode.online_shop_api.app.users.mapper.UserMapper;
 import mycode.online_shop_api.app.users.model.User;
 import mycode.online_shop_api.app.users.repository.UserRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -38,11 +40,21 @@ public class OrderCommandServiceImpl implements OrderCommandService {
     private ProductRepository productRepository;
     private UserRepository userRepository;
 
+    private User getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = authentication.getName();
 
+        return userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new NoUserFound("User not found"));
+    }
 
 
     @Override
-    public OrderResponse addOrder( int customerId ,CreateOrderRequest createOrderRequest) {
+    public OrderResponse addOrder( CreateOrderRequest createOrderRequest) {
+
+        User user = getAuthenticatedUser();
+
+
         List<AddProductToCartRequest> list = createOrderRequest.productList();
 
         if (list == null || list.isEmpty()) {
@@ -50,8 +62,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
         }
 
 
-        User user = userRepository.findById(customerId)
-                .orElseThrow(() -> new NoUserFound("User not found"));
+
         Order order = Order.builder().orderAddress(user.getBillingAddress())
                         .shippingAddress(user.getShippingAddress())
                         .orderDate(LocalDate.now())
@@ -105,7 +116,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
     }
 
     @Override
-    public void updateOrder(int id, CreateOrderUpdateRequest createOrderUpdateRequest) {
+    public OrderResponse updateOrder(int id, CreateOrderUpdateRequest createOrderUpdateRequest) {
         Optional<Order> order= orderRepository.findById(id);
 
         if(order.isPresent()){
@@ -118,9 +129,13 @@ public class OrderCommandServiceImpl implements OrderCommandService {
             order1.setShippingAddress(createOrderUpdateRequest.shippingAddress());
 
             orderRepository.saveAndFlush(order1);
+
+
         }else{
             throw new NoOrderFound(" ");
         }
+
+        return OrderMapper.orderToResponseDto(order.get());
 
     }
 

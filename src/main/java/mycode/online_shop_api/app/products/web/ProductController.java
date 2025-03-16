@@ -11,6 +11,7 @@ import mycode.online_shop_api.app.products.service.ProductCommandService;
 import mycode.online_shop_api.app.products.service.ProductQueryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,24 +23,21 @@ public class ProductController {
     private ProductQueryService productQueryService;
     private ProductCommandService productCommandService;
 
-    @GetMapping(path = "/{productId}")
-    public ResponseEntity<ProductResponse> getProduct(@PathVariable int productId){
 
-        return new ResponseEntity<>(productQueryService.findById(productId), HttpStatus.OK);
-
-    }
-
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/addProduct")
     public ResponseEntity<ProductResponse> addProduct(@RequestBody CreateProductRequest createProductRequest){
         return new ResponseEntity<>(productCommandService.addProduct(createProductRequest), HttpStatus.CREATED);
     }
 
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') ")
     @DeleteMapping(path = "/{productId}")
     public ResponseEntity<ProductResponse> deleteProduct(@PathVariable int productId){
         return new ResponseEntity<>(productCommandService.deleteProduct(productId), HttpStatus.ACCEPTED);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping(path ="/{productId}")
     public ResponseEntity<ProductResponse> updateProductPut(@PathVariable int productId, @Valid @RequestBody UpdateProductRequest updateProductRequest){
 
@@ -51,39 +49,19 @@ public class ProductController {
     }
 
 
-    @PatchMapping(path ="/{productId}")
-    public ResponseEntity<ProductResponse> updateProductPatch(@PathVariable int productId, @Valid @RequestBody UpdateProductRequest updateProductRequest){
-
-        productCommandService.updateProductPatch(productId,updateProductRequest);
-        ProductResponse productResponse = productQueryService.findById(productId);
-        return new ResponseEntity<>(productResponse, HttpStatus.ACCEPTED);
-
-    }
-
-
-    @GetMapping(path = "/category/{categoryName}")
-    public ResponseEntity<ProductResponseList> getByCategories(@PathVariable String categoryName){
-
-        return new ResponseEntity<>(productQueryService.getByCategory(categoryName), HttpStatus.ACCEPTED);
-
-    }
-
-    @GetMapping(path = "/search/{productName}")
-    public ResponseEntity<ProductResponse> findByName(@PathVariable String productName){
-        return new ResponseEntity<>(productQueryService.findByName(productName), HttpStatus.ACCEPTED);
-
-    }
-
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENT')")
     @GetMapping("/getAllProducts")
     public  ResponseEntity<ProductResponseList> getAllProducts(){
         return new ResponseEntity<>(productQueryService.getAllProducts(), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENT')")
     @GetMapping(path = "/mostSold")
     public ResponseEntity<ProductResponseList> getMostSoldProduct(){
         return new ResponseEntity<>(productQueryService.getTopSellingProducts(), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("/totalProducts")
     public ResponseEntity<Integer> totalProducts(){
         return new ResponseEntity<>(productQueryService.totalProducts(), HttpStatus.OK);

@@ -10,6 +10,7 @@ import mycode.online_shop_api.app.cart.services.CartCommandService;
 import mycode.online_shop_api.app.cart.services.CartQueryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,28 +23,33 @@ public class CartController {
     private CartCommandService cartCommandService;
     private CartQueryService cartQueryService;
 
-    @GetMapping("/getCartByUserId/{userId}")
-    public ResponseEntity<CartResponse> getCart(@PathVariable long userId) {
-        return new ResponseEntity<>(cartQueryService.getCartByUserId(userId), HttpStatus.OK);
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENT')")
+    @GetMapping("/getCart")
+    public ResponseEntity<CartResponse> getCart() {
+        return new ResponseEntity<>(cartQueryService.getCart(), HttpStatus.OK);
     }
 
-    @PostMapping("/addProductToCart/{userId}")
-    public ResponseEntity<CartResponse> addProductToCart(@RequestBody AddProductToCartRequest addProductToCartRequest, @PathVariable long userId) {
-        return new ResponseEntity<>(cartCommandService.addProductToCart(addProductToCartRequest, userId), HttpStatus.CREATED);
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENT')")
+    @PostMapping("/addProductToCart")
+    public ResponseEntity<CartResponse> addProductToCart(@RequestBody AddProductToCartRequest addProductToCartRequest) {
+        return new ResponseEntity<>(cartCommandService.addProductToCart(addProductToCartRequest), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/deleteProductFromCart/{userId}/product/{productId}")
-    public ResponseEntity<CartResponse> deleteProductFromCart(@PathVariable int userId, @PathVariable int productId) {
-        return new ResponseEntity<>(cartCommandService.deleteProductFromCart(productId, userId), HttpStatus.ACCEPTED);
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENT')")
+    @DeleteMapping("/deleteProductFromCart/product/{productId}")
+    public ResponseEntity<CartResponse> deleteProductFromCart( @PathVariable int productId) {
+        return new ResponseEntity<>(cartCommandService.deleteProductFromCart(productId), HttpStatus.ACCEPTED);
     }
 
-    @PutMapping("/updateProductQuantity/{userId}/products/{productId}")
-    public ResponseEntity<CartResponse> updateProductQuantity(@PathVariable long userId, @PathVariable int productId, @RequestBody UpdateCartQuantityRequest updateCartQuantityRequest){
-        return new ResponseEntity<>(cartCommandService.updateCartQuantity(updateCartQuantityRequest,userId,productId), HttpStatus.OK);
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENT')")
+    @PutMapping("/updateProductQuantity/products/{productId}")
+    public ResponseEntity<CartResponse> updateProductQuantity( @PathVariable int productId, @RequestBody UpdateCartQuantityRequest updateCartQuantityRequest){
+        return new ResponseEntity<>(cartCommandService.updateCartQuantity(updateCartQuantityRequest,productId), HttpStatus.OK);
     }
 
-    @GetMapping("/emptyUserCart/{userId}")
-    public ResponseEntity<String> emptyUserCart(@PathVariable long userId){
-        return new ResponseEntity<>(cartCommandService.emptyUserCart(userId), HttpStatus.OK);
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENT')")
+    @DeleteMapping("/emptyUserCart")
+    public ResponseEntity<String> emptyUserCart(){
+        return new ResponseEntity<>(cartCommandService.emptyUserCart(), HttpStatus.ACCEPTED);
     }
 }

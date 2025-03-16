@@ -1,5 +1,6 @@
 package mycode.online_shop_api.app.products.service;
 
+import lombok.AllArgsConstructor;
 import mycode.online_shop_api.app.orderDetails.repository.OrderDetailsRepository;
 import mycode.online_shop_api.app.products.dto.ProductResponse;
 import mycode.online_shop_api.app.products.dto.ProductResponseList;
@@ -13,32 +14,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+
+@AllArgsConstructor
 @Service
 public class ProductQueryServiceImpl implements ProductQueryService{
 
     private final OrderDetailsRepository orderDetailsRepository;
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
-    public ProductQueryServiceImpl(ProductRepository productRepository, OrderDetailsRepository orderDetailsRepository) {
-        this.productRepository = productRepository;
-        this.orderDetailsRepository = orderDetailsRepository;
-    }
-
-
-    @Override
-    public void showProducts() {
-        productRepository.findAll().forEach(System.out::println);
-    }
-
-    @Override
-    public void showProductsSortedASC() {
-        productRepository.sortedAsc().get().forEach(System.out::println);
-    }
-
-    @Override
-    public void showProductsSortedDESC() {
-        productRepository.sortedDesc().get().forEach(System.out::println);
-    }
 
 
     @Override
@@ -51,44 +34,6 @@ public class ProductQueryServiceImpl implements ProductQueryService{
         }else{
             throw new NoProductFound(" ");
         }
-    }
-
-    @Override
-    public ProductResponse mostExpensive() {
-        Optional<List<Product>> list = productRepository.sortedDesc();
-        return ProductMapper.productToResponseDto(list.get().get(0));
-
-    }
-
-    @Override
-    public ProductResponseList getByCategory(String category) {
-        List<ProductResponse> list = new ArrayList<>();
-
-        List<Product> products = productRepository.findAll();
-
-        products.forEach(product -> {
-            if(product.getCategory().equals(category)){
-                list.add(ProductMapper.productToResponseDto(product));
-            }
-        });
-
-
-
-        if(list.isEmpty()){
-            throw new NoProductFound("No products in this category found");
-        }else{
-            return new ProductResponseList(list);
-        }
-    }
-
-    @Override
-    public ProductResponse findByName(String productName) {
-
-        Product product = productRepository.findByName(productName)
-                .orElseThrow(() -> new NoProductFound("No product with this name found"));
-
-
-        return ProductMapper.productToResponseDto(product);
     }
 
     @Override

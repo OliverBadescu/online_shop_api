@@ -12,5 +12,4 @@ public interface ProductCommandService {
 
     void updateProductPut(int id, UpdateProductRequest updateProductRequest);
 
-    void updateProductPatch(int id, UpdateProductRequest updateProductRequest);
 }

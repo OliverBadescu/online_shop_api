@@ -11,11 +11,11 @@ import java.util.ArrayList;
 
 public interface OrderCommandService {
 
-    OrderResponse addOrder( int customerId,CreateOrderRequest createOrderRequest);
+    OrderResponse addOrder(CreateOrderRequest createOrderRequest);
 
     OrderResponse deleteOrder(int id);
 
-    void updateOrder(int id, CreateOrderUpdateRequest createOrderUpdateRequest);
+    OrderResponse updateOrder(int id, CreateOrderUpdateRequest createOrderUpdateRequest);
 
     OrderResponse deleteProductFromOrder(int orderId, EditOrderRequest editOrderRequest);
 

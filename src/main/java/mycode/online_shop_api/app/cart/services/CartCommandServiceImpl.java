@@ -17,6 +17,8 @@ import mycode.online_shop_api.app.products.repository.ProductRepository;
 import mycode.online_shop_api.app.users.exceptions.NoUserFound;
 import mycode.online_shop_api.app.users.model.User;
 import mycode.online_shop_api.app.users.repository.UserRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,13 +33,25 @@ public class CartCommandServiceImpl implements CartCommandService{
     CartProductRepository cartProductRepository;
     UserRepository userRepository;
 
+    private User getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = authentication.getName();
+
+        return userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new NoUserFound("User not found"));
+    }
+
+
     @Override
-    public CartResponse addProductToCart(AddProductToCartRequest cartRequest, long userId) {
-        Optional<Cart> cartTemp = cartRepository.findByUserId(userId);
+    public CartResponse addProductToCart(AddProductToCartRequest cartRequest) {
+
+        User user = getAuthenticatedUser();
+
+        Optional<Cart> cartTemp = cartRepository.findByUserId(user.getId());
         Cart cart;
 
         cart = cartTemp.orElseGet(() -> Cart.builder()
-                .user(userRepository.findById(userId).orElseThrow(() -> new NoUserFound("No user with this id found")))
+                .user(userRepository.findById(user.getId()).orElseThrow(() -> new NoUserFound("No user with this id found")))
                 .cartProducts(null).build());
 
 
@@ -57,13 +71,15 @@ public class CartCommandServiceImpl implements CartCommandService{
                 ))
                 .toList();
 
-        return CartResponse.builder().userId(userId).id(cart.getId()).list(productResponses).build();
+        return CartResponse.builder().userId(user.getId()).id(cart.getId()).list(productResponses).build();
     }
 
     @Override
-    public CartResponse deleteProductFromCart(int productId, long userId) {
+    public CartResponse deleteProductFromCart(int productId) {
 
-        Cart cart = cartRepository.findByUserId(userId)
+        User user = getAuthenticatedUser();
+
+        Cart cart = cartRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new NoCartFound("No cart with this user id found"));
 
         Product product = productRepository.findById(productId)
@@ -94,8 +110,10 @@ public class CartCommandServiceImpl implements CartCommandService{
     }
 
     @Override
-    public CartResponse updateCartQuantity(UpdateCartQuantityRequest updateCartQuantityRequest, long userId, int productId) {
-        Cart cart = cartRepository.findByUserId(userId)
+    public CartResponse updateCartQuantity(UpdateCartQuantityRequest updateCartQuantityRequest, int productId) {
+
+        User user = getAuthenticatedUser();
+        Cart cart = cartRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new NoCartFound("No cart found for this user"));
 
         Product product = productRepository.findById(productId)
@@ -126,8 +144,10 @@ public class CartCommandServiceImpl implements CartCommandService{
     }
 
     @Override
-    public String emptyUserCart(long userId) {
-        Cart cart = cartRepository.findByUserId(userId)
+    public String emptyUserCart() {
+        User user = getAuthenticatedUser();
+
+        Cart cart = cartRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new NoCartFound("No cart found for this user"));
 
         List<CartProduct> cartProducts = cartProductRepository.getAllByCart(cart)
@@ -139,7 +159,7 @@ public class CartCommandServiceImpl implements CartCommandService{
 
         cartRepository.save(cart);
 
-        return "Cart for user with Id: " + userId + " deleted";
+        return "Cart for user with Id: " + user.getId() + " deleted";
     }
 
 }

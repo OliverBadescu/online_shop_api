@@ -4,6 +4,6 @@ import mycode.online_shop_api.app.cart.dtos.CartResponse;
 
 public interface CartQueryService {
 
-    CartResponse getCartByUserId(long id);
+    CartResponse getCart();
 
 }

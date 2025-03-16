@@ -6,12 +6,12 @@ import mycode.online_shop_api.app.cart.dtos.UpdateCartQuantityRequest;
 
 public interface CartCommandService {
 
-    CartResponse addProductToCart(AddProductToCartRequest cartRequest, long userId);
+    CartResponse addProductToCart(AddProductToCartRequest cartRequest);
 
-    CartResponse deleteProductFromCart(int productId, long userId);
+    CartResponse deleteProductFromCart(int productId);
 
-    CartResponse updateCartQuantity(UpdateCartQuantityRequest updateCartQuantityRequest, long userId, int productId);
+    CartResponse updateCartQuantity(UpdateCartQuantityRequest updateCartQuantityRequest, int productId);
 
-    String emptyUserCart(long userId);
+    String emptyUserCart();
 
 }

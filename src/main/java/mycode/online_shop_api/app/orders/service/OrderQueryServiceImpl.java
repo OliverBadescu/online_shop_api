@@ -12,6 +12,8 @@ import mycode.online_shop_api.app.users.exceptions.NoUserFound;
 import mycode.online_shop_api.app.users.mapper.UserMapper;
 import mycode.online_shop_api.app.users.model.User;
 import mycode.online_shop_api.app.users.repository.UserRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
@@ -26,34 +28,31 @@ public class OrderQueryServiceImpl implements OrderQueryService{
     private UserRepository userRepository;
 
 
-    @Override
-    public OrderResponse findById(int id) {
-        Optional<Order> order = orderRepository.findById(id);
+    private User getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = authentication.getName();
 
-        if(order.isPresent()){
-            return new OrderResponse(order.get().getId(),order.get().getOrderEmail(),order.get().getShippingAddress(),order.get().getOrderAddress(),order.get().getOrderDate(),order.get().getAmount(),order.get().getOrderStatus(), UserMapper.userToResponseDto(order.get().getUser()));
-
-        }else{
-            throw new NoOrderFound(" ");
-        }
+        return userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new NoUserFound("User not found"));
     }
 
 
     @Override
-    public OrderResponseList customerOrders(long userId) {
-        Optional<List<Order>> list = orderRepository.getAllUserOrders(userId);
-        Optional<User> user = userRepository.findById(userId);
+    public OrderResponseList customerOrders() {
+
+        User user = getAuthenticatedUser();
+
+        Optional<List<Order>> list = orderRepository.getAllUserOrders(user.getId());
+
         List<OrderResponse> rez = new ArrayList<>();
 
-        if(user.isPresent()){
-            list.get().forEach(list1 -> {
-                rez.add(OrderMapper.orderToResponseDto(list1));
-            });
+        list.ifPresent(orders -> orders.forEach(list1 -> {
+            rez.add(OrderMapper.orderToResponseDto(list1));
+        }));
 
-            return new OrderResponseList(rez);
-        }else{
-            throw new NoUserFound("No customer with this id found");
-        }
+
+
+        return new OrderResponseList(rez);
 
     }
 

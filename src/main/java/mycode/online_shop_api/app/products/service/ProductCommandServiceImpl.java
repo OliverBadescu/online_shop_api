@@ -79,30 +79,7 @@ public class ProductCommandServiceImpl implements ProductCommandService{
         }
     }
 
-    @Override
-    public void updateProductPatch(int id, UpdateProductRequest updateProductRequest) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new NoProductFound("Product not found"));
 
-        Optional.ofNullable(updateProductRequest.category())
-                .ifPresent(product::setCategory);
 
-        Optional.ofNullable(updateProductRequest.description())
-                .ifPresent(product::setDescriptions);
 
-        Optional.ofNullable(updateProductRequest.name())
-                .ifPresent(product::setName);
-
-        setIfValid(product::setPrice, updateProductRequest.price(), price -> price > 0);
-        setIfValid(product::setStock, updateProductRequest.stock(), stock -> stock >= 0);
-        setIfValid(product::setWeight, updateProductRequest.weight(), weight -> weight > 0);
-
-        productRepository.saveAndFlush(product);
-    }
-
-    private <T> void setIfValid(Consumer<T> setter, T value, Predicate<T> validator) {
-        if (validator.test(value)) {
-            setter.accept(value);
-        }
-    }
 }

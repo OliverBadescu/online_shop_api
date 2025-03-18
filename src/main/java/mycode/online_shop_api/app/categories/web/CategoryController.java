@@ -25,7 +25,7 @@ public class CategoryController {
     CategoryQueryService categoryQueryService;
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    @PostMapping
+    @PostMapping("/addCategory")
     public ResponseEntity<CategoryResponse> addCategory(@RequestBody CreateCategoryRequest createCategoryRequest){
 
         return new ResponseEntity<>(categoryCommandService.addCategory(createCategoryRequest), HttpStatus.CREATED);
@@ -33,7 +33,7 @@ public class CategoryController {
     }
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    @DeleteMapping(path = "/{categoryId}")
+    @DeleteMapping(path = "/deleteCategory/{categoryId}")
     public ResponseEntity<CategoryResponse> deleteCategory(@PathVariable int categoryId){
 
         return new ResponseEntity<>(categoryCommandService.deleteCategory(categoryId), HttpStatus.ACCEPTED);
@@ -41,7 +41,7 @@ public class CategoryController {
     }
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    @PutMapping(path = "/{categoryId}")
+    @PutMapping(path = "/updateCategory/{categoryId}")
     public ResponseEntity<CategoryResponse> updateCategory(@PathVariable int categoryId, @RequestBody UpdateCategoryRequest updateCategoryRequest){
         return new ResponseEntity<>(categoryCommandService.updateCategory(categoryId, updateCategoryRequest), HttpStatus.ACCEPTED);
     }

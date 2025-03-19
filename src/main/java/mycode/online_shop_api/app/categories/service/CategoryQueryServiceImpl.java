@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import mycode.online_shop_api.app.categories.dtos.CategoryResponse;
 import mycode.online_shop_api.app.categories.dtos.CategoryResponseList;
 import mycode.online_shop_api.app.categories.exceptions.NoCategoryFound;
+import mycode.online_shop_api.app.categories.mapper.CategoryMapper;
 import mycode.online_shop_api.app.categories.model.Category;
 import mycode.online_shop_api.app.categories.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
@@ -27,9 +28,7 @@ public class CategoryQueryServiceImpl implements CategoryQueryService{
         ArrayList<CategoryResponse> responses = new ArrayList<>();
 
         list.forEach(category -> {
-            responses.add(CategoryResponse.builder()
-                    .name(category.getName())
-                    .id(category.getId()).build());
+            responses.add(CategoryMapper.categoryToResponseDto(category));
         });
 
         return new CategoryResponseList(responses);

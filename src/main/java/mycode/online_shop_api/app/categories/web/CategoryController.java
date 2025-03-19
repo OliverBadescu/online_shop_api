@@ -52,4 +52,13 @@ public class CategoryController {
         return new ResponseEntity<>(categoryQueryService.getAllCategories(), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/addSubcategory/{parentId}")
+    public ResponseEntity<CategoryResponse> addSubcategory(
+            @PathVariable int parentId,
+            @RequestBody CreateCategoryRequest createCategoryRequest) {
+        return new ResponseEntity<>(categoryCommandService.addSubcategory(parentId, createCategoryRequest), HttpStatus.CREATED);
+    }
+
+
 }

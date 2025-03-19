@@ -12,4 +12,6 @@ public interface CategoryCommandService {
 
     CategoryResponse updateCategory(int id, UpdateCategoryRequest updateCategoryRequest);
 
+    CategoryResponse addSubcategory(int parentId, CreateCategoryRequest createCategoryRequest);
+
 }

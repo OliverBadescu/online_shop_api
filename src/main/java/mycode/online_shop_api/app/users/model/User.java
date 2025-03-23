@@ -28,7 +28,7 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @Setter
 @Builder
 @EqualsAndHashCode(exclude = "cart")
-@Table(name = "user")
+@Table(name = "users")
 @Entity(name = "User")
 public class User implements UserDetails {
 

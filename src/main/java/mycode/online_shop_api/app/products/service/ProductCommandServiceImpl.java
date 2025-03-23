@@ -29,9 +29,12 @@ public class ProductCommandServiceImpl implements ProductCommandService{
 
     @Override
     public ProductResponse addProduct(CreateProductRequest createProductRequest) {
-        Product product = Product.builder().name(createProductRequest.name()).category(createProductRequest.category()).createDate(LocalDate.now()).descriptions(createProductRequest.description()).price(createProductRequest.price()).stock(createProductRequest.stock()).weight(createProductRequest.weight()).build();
-        Category category = categoryRepository.findByName(product.getCategory())
+
+
+        Category category = categoryRepository.findByName(createProductRequest.category())
                 .orElseThrow(() -> new NoCategoryFound("No category with this name found"));
+        Product product = Product.builder().name(createProductRequest.name()).category(createProductRequest.category()).createDate(LocalDate.now()).descriptions(createProductRequest.description()).price(createProductRequest.price()).stock(createProductRequest.stock()).weight(createProductRequest.weight()).build();
+
 
         productRepository.saveAndFlush(product);
         ProductCategories productCategories = ProductCategories.builder().product(product).category(category).build();

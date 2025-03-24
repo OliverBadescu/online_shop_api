@@ -24,6 +24,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ProductController.class)
@@ -128,6 +129,7 @@ class ProductControllerTest {
         when(productQueryService.getAllProducts()).thenReturn(responseList);
 
         mockMvc.perform(get("/product/getAllProducts"))
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.products.length()").value(3));
     }

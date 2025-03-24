@@ -44,8 +44,9 @@ public class Cart {
     private User user;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<CartProduct> cartProducts = new HashSet<>();
+
 
     public void addProduct(Product product, int quantity) {
 

@@ -17,9 +17,6 @@ public interface OrderCommandService {
 
     OrderResponse updateOrder(int id, CreateOrderUpdateRequest createOrderUpdateRequest);
 
-    OrderResponse deleteProductFromOrder(int orderId, EditOrderRequest editOrderRequest);
-
-    OrderResponse updateProductQuantity(int orderId, EditOrderRequest editOrderRequest);
 
     OrderResponse cancelOrder(int orderId);
 

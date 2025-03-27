@@ -30,10 +30,19 @@ public class OrderQueryServiceImpl implements OrderQueryService{
 
     private User getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new NoUserFound("No authenticated user found");
+        }
+
         String userEmail = authentication.getName();
 
+        if (userEmail == null || userEmail.isEmpty()) {
+            throw new NoUserFound("User email not found in authentication");
+        }
+
         return userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new NoUserFound("User not found"));
+                .orElseThrow(() -> new NoUserFound("User not found for email: " + userEmail));
     }
 
 

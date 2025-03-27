@@ -139,60 +139,6 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 
     }
 
-    @Override
-    public OrderResponse deleteProductFromOrder(int orderId, EditOrderRequest editOrderRequest) {
-        Product product = productRepository.findByName(editOrderRequest.productName())
-                .orElseThrow(() -> new NoProductFound("No product with this name found"));
-
-
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new NoOrderFound("No order with this ID found"));
-
-        OrderDetails orderDetails = orderDetailsRepository
-                .findByOrderIdAndProductId(order.getId(), product.getId())
-                .orElseThrow(() -> new NoOrderDetailsFound("No order details for this order and product found"));
-
-        double productTotalPrice = orderDetails.getQuantity() * orderDetails.getPrice();
-        order.setAmount(order.getAmount() - productTotalPrice);
-
-        order.removeOrderDetails(orderDetails);
-
-        orderDetailsRepository.delete(orderDetails);
-
-        orderRepository.save(order);
-        return OrderMapper.orderToResponseDto(order);
-    }
-
-    @Override
-    public OrderResponse updateProductQuantity(int orderId, EditOrderRequest editOrderRequest) {
-        Product product = productRepository.findByName(editOrderRequest.productName())
-                .orElseThrow(() -> new NoProductFound("No product with this name found"));
-
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new NoOrderFound("No order with this id found"));
-
-
-        OrderDetails orderDetails = orderDetailsRepository
-                .findByOrderIdAndProductId(order.getId(), product.getId())
-                .orElseThrow(() -> new NoOrderDetailsFound("No order details for this order and product found"));
-
-        int oldQuantity = orderDetails.getQuantity();
-        int newQuantity = editOrderRequest.quantity();
-
-        orderDetails.setQuantity(newQuantity);
-
-        int quantityDifference = newQuantity - oldQuantity;
-
-
-        order.setAmount(order.getAmount() + (quantityDifference * orderDetails.getPrice()));
-
-
-        orderRepository.save(order);
-        orderDetailsRepository.save(orderDetails);
-
-
-        return OrderMapper.orderToResponseDto(order);
-    }
 
 
     @Override

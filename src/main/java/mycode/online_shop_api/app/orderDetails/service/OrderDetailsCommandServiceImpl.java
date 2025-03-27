@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class OrderDetailsCommandServiceImpl implements OrderDetailsCommandService{
 
-    private OrderDetailsRepository orderDetailsRepository;
+    private final OrderDetailsRepository orderDetailsRepository;
 
     public OrderDetailsCommandServiceImpl(OrderDetailsRepository orderDetailsRepository) {
         this.orderDetailsRepository = orderDetailsRepository;

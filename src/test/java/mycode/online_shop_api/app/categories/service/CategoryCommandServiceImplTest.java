@@ -6,6 +6,7 @@ import mycode.online_shop_api.app.categories.dtos.CreateCategoryRequest;
 import mycode.online_shop_api.app.categories.dtos.UpdateCategoryRequest;
 import mycode.online_shop_api.app.categories.exceptions.CategoryAlreadyExists;
 import mycode.online_shop_api.app.categories.exceptions.NoCategoryFound;
+import mycode.online_shop_api.app.categories.mock.CategoryMockData;
 import mycode.online_shop_api.app.categories.model.Category;
 import mycode.online_shop_api.app.categories.repository.CategoryRepository;
 import mycode.online_shop_api.app.categories.service.CategoryCommandServiceImpl;
@@ -35,9 +36,7 @@ class CategoryCommandServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        mockCategory = new Category();
-        mockCategory.setId(1);
-        mockCategory.setName("Electronics");
+        mockCategory = CategoryMockData.createCategory("Electronics");
     }
 
     @Test

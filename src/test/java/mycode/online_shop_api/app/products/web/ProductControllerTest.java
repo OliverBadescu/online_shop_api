@@ -14,6 +14,7 @@ import mycode.online_shop_api.app.system.jwt.JWTTokenProvider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -22,12 +23,13 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ProductController.class)
+@AutoConfigureMockMvc(addFilters = false)
 class ProductControllerTest {
 
     @Autowired
@@ -52,8 +54,7 @@ class ProductControllerTest {
     @WithMockUser(roles = "ADMIN")
     @DisplayName("POST /product/addProduct - should return 201 CREATED")
     void addProduct() throws Exception {
-        CreateProductRequest request = new CreateProductRequest("Laptop", "Gaming Beast", "Gaming Laptop",
-               2000, 3, 3.0);
+        CreateProductRequest request = new CreateProductRequest("Laptop", "Gaming Beast", "Gaming Laptop", 2000, 3, 3.0);
         Product product = ProductMockData.createGamingLaptop();
         product.setId(1);
         ProductResponse response = new ProductResponse(product.getId(), product.getCategory(), product.getCreateDate(),
@@ -86,10 +87,9 @@ class ProductControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    @DisplayName("PUT /product/{id} - should update and return updated product")
+    @DisplayName("PUT /product/{id} - should update and return the updated product")
     void updateProductPut() throws Exception {
-        UpdateProductRequest updateRequest = new UpdateProductRequest("UpdatedCat", "UpdatedDesc", "Updated",
-                888, 15, 1.5);
+        UpdateProductRequest updateRequest = new UpdateProductRequest("UpdatedCat", "UpdatedDesc", "Updated", 888, 15, 1.5);
         Product product = ProductMockData.createCheapLaptop();
         product.setId(1);
         ProductResponse response = new ProductResponse(product.getId(), product.getCategory(), product.getCreateDate(),
@@ -129,9 +129,8 @@ class ProductControllerTest {
         when(productQueryService.getAllProducts()).thenReturn(responseList);
 
         mockMvc.perform(get("/product/getAllProducts"))
-                .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.products.length()").value(3));
+                .andExpect(jsonPath("$.list.length()").value(3));
     }
 
     @Test
@@ -148,6 +147,6 @@ class ProductControllerTest {
 
         mockMvc.perform(get("/product/mostSold"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.products.length()").value(3));
+                .andExpect(jsonPath("$.list.length()").value(3));
     }
 }

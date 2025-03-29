@@ -1,39 +1,39 @@
 package mycode.online_shop_api.app.products.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import mycode.online_shop_api.app.products.dto.CreateProductRequest;
-import mycode.online_shop_api.app.products.dto.ProductResponse;
-import mycode.online_shop_api.app.products.dto.ProductResponseList;
-import mycode.online_shop_api.app.products.dto.UpdateProductRequest;
+import mycode.online_shop_api.app.products.dto.*;
 import mycode.online_shop_api.app.products.mocks.ProductMockData;
 import mycode.online_shop_api.app.products.model.Product;
 import mycode.online_shop_api.app.products.service.ProductCommandService;
 import mycode.online_shop_api.app.products.service.ProductQueryService;
 import mycode.online_shop_api.app.system.jwt.JWTAuthorizationFilter;
 import mycode.online_shop_api.app.system.jwt.JWTTokenProvider;
+import mycode.online_shop_api.app.mock.SecurityMockFactory;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ProductController.class)
-@AutoConfigureMockMvc(addFilters = false)
-class ProductControllerTest {
+class ProductControllerTestAuth {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @MockBean
     private ProductCommandService productCommandService;
@@ -47,16 +47,22 @@ class ProductControllerTest {
     @MockBean
     private JWTAuthorizationFilter jwtAuthorizationFilter;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @BeforeEach
+    void setUp() {
 
 
+        SecurityMockFactory.setupTokens(jwtTokenProvider);
+
+
+        SecurityMockFactory.mockAdminToken(jwtTokenProvider);
+        SecurityMockFactory.mockClientToken(jwtTokenProvider);
+        SecurityMockFactory.mockInvalidToken(jwtTokenProvider);
+    }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
-    @DisplayName("POST /product/addProduct - should return 201 CREATED")
-    void addProduct() throws Exception {
-        CreateProductRequest request = new CreateProductRequest("Laptop", "Gaming Beast", "Gaming Laptop", 2000, 3, 3.0);
+    @DisplayName("POST /product/addProduct - ADMIN -> 201 Created")
+    void addProduct_admin() throws Exception {
+        CreateProductRequest request = new CreateProductRequest("Laptop", "Gaming", "Gaming Laptop", 2000, 3, 3.0);
         Product product = ProductMockData.createGamingLaptop();
         product.setId(1);
         ProductResponse response = new ProductResponse(product.getId(), product.getCategory(), product.getCreateDate(),
@@ -65,17 +71,40 @@ class ProductControllerTest {
         when(productCommandService.addProduct(any())).thenReturn(response);
 
         mockMvc.perform(post("/product/addProduct")
+                        .header("Authorization", "Bearer " + SecurityMockFactory.ADMIN_TOKEN)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("Gaming Laptop"));
     }
 
+    @Test
+    @DisplayName("POST /product/addProduct - CLIENT -> 403 Forbidden")
+    void addProduct_client_forbidden() throws Exception {
+        CreateProductRequest request = new CreateProductRequest("Laptop", "Gaming", "Gaming Laptop", 2000, 3, 3.0);
+
+        mockMvc.perform(post("/product/addProduct")
+                        .header("Authorization", "Bearer " + SecurityMockFactory.CLIENT_TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isForbidden());
+    }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
-    @DisplayName("DELETE /product/{id} - should return 202 ACCEPTED")
-    void deleteProduct() throws Exception {
+    @DisplayName("POST /product/addProduct - Invalid Token -> 403 Forbidden")
+    void addProduct_invalidToken_forbidden() throws Exception {
+        CreateProductRequest request = new CreateProductRequest("Laptop", "Gaming", "Gaming Laptop", 2000, 3, 3.0);
+
+        mockMvc.perform(post("/product/addProduct")
+                        .header("Authorization", "Bearer " + SecurityMockFactory.INVALID_TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("DELETE /product/{id} - ADMIN -> 202 Accepted")
+    void deleteProduct_admin() throws Exception {
         Product product = ProductMockData.createCheapLaptop();
         product.setId(1);
         ProductResponse response = new ProductResponse(product.getId(), product.getCategory(), product.getCreateDate(),
@@ -83,16 +112,16 @@ class ProductControllerTest {
 
         when(productCommandService.deleteProduct(1)).thenReturn(response);
 
-        mockMvc.perform(delete("/product/1"))
+        mockMvc.perform(delete("/product/1")
+                        .header("Authorization", "Bearer " + SecurityMockFactory.ADMIN_TOKEN))
                 .andExpect(status().isAccepted())
                 .andExpect(jsonPath("$.name").value("Cheap Laptop"));
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
-    @DisplayName("PUT /product/{id} - should update and return the updated product")
-    void updateProductPut() throws Exception {
-        UpdateProductRequest updateRequest = new UpdateProductRequest("UpdatedCat", "UpdatedDesc", "Updated", 888, 15, 1.5);
+    @DisplayName("PUT /product/{id} - ADMIN -> 202 Accepted")
+    void updateProduct_admin() throws Exception {
+        UpdateProductRequest update = new UpdateProductRequest("UpdatedCat", "UpdatedDesc", "Updated", 888, 15, 1.5);
         Product product = ProductMockData.createCheapLaptop();
         product.setId(1);
         ProductResponse response = new ProductResponse(product.getId(), product.getCategory(), product.getCreateDate(),
@@ -102,27 +131,27 @@ class ProductControllerTest {
         when(productQueryService.findById(1)).thenReturn(response);
 
         mockMvc.perform(put("/product/1")
+                        .header("Authorization", "Bearer " + SecurityMockFactory.ADMIN_TOKEN)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updateRequest)))
+                        .content(objectMapper.writeValueAsString(update)))
                 .andExpect(status().isAccepted())
                 .andExpect(jsonPath("$.name").value("Cheap Laptop"));
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
-    @DisplayName("GET /product/totalProducts - should return total count")
-    void totalProducts() throws Exception {
+    @DisplayName("GET /product/totalProducts - ADMIN -> 200 OK")
+    void totalProducts_admin() throws Exception {
         when(productQueryService.totalProducts()).thenReturn(7);
 
-        mockMvc.perform(get("/product/totalProducts"))
+        mockMvc.perform(get("/product/totalProducts")
+                        .header("Authorization", "Bearer " + SecurityMockFactory.ADMIN_TOKEN))
                 .andExpect(status().isOk())
                 .andExpect(content().string("7"));
     }
 
     @Test
-    @WithMockUser(roles = "CLIENT")
-    @DisplayName("GET /product/getAllProducts - should return list of products")
-    void getAllProducts() throws Exception {
+    @DisplayName("GET /product/getAllProducts - CLIENT -> 200 OK")
+    void getAllProducts_client() throws Exception {
         List<Product> products = ProductMockData.createSampleProducts();
         ProductResponseList responseList = new ProductResponseList(products.stream()
                 .map(p -> new ProductResponse(p.getId(), p.getCategory(), p.getCreateDate(), p.getDescriptions(),
@@ -131,15 +160,15 @@ class ProductControllerTest {
 
         when(productQueryService.getAllProducts()).thenReturn(responseList);
 
-        mockMvc.perform(get("/product/getAllProducts"))
+        mockMvc.perform(get("/product/getAllProducts")
+                        .header("Authorization", "Bearer " + SecurityMockFactory.CLIENT_TOKEN))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.list.length()").value(3));
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
-    @DisplayName("GET /product/mostSold - should return top selling products")
-    void getMostSoldProducts() throws Exception {
+    @DisplayName("GET /product/mostSold - ADMIN -> 200 OK")
+    void getMostSold_admin() throws Exception {
         List<Product> products = ProductMockData.createSampleProducts();
         ProductResponseList responseList = new ProductResponseList(products.stream()
                 .map(p -> new ProductResponse(p.getId(), p.getCategory(), p.getCreateDate(), p.getDescriptions(),
@@ -148,7 +177,8 @@ class ProductControllerTest {
 
         when(productQueryService.getTopSellingProducts()).thenReturn(responseList);
 
-        mockMvc.perform(get("/product/mostSold"))
+        mockMvc.perform(get("/product/mostSold")
+                        .header("authorization", "Bearer " + SecurityMockFactory.ADMIN_TOKEN))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.list.length()").value(3));
     }

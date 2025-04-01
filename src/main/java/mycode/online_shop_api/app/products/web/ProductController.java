@@ -12,6 +12,7 @@ import mycode.online_shop_api.app.products.service.ProductQueryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,12 +22,15 @@ import org.springframework.web.bind.annotation.*;
 public class ProductController {
 
     private ProductQueryService productQueryService;
-    private ProductCommandService productCommandService;
+    private ProductCommandService productCommandService;;
 
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/addProduct")
     public ResponseEntity<ProductResponse> addProduct(@RequestBody CreateProductRequest createProductRequest){
+
+
+        System.out.println();
         return new ResponseEntity<>(productCommandService.addProduct(createProductRequest), HttpStatus.CREATED);
     }
 

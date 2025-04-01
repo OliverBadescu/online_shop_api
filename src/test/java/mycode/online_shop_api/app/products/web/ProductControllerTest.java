@@ -53,7 +53,7 @@ class ProductControllerTest {
 
 
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(roles = "CLIENT")
     @DisplayName("POST /product/addProduct - should return 201 CREATED")
     void addProduct() throws Exception {
         CreateProductRequest request = new CreateProductRequest("Laptop", "Gaming Beast", "Gaming Laptop", 2000, 3, 3.0);

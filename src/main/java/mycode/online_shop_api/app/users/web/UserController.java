@@ -58,7 +58,7 @@ public class UserController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping(path = "/delete/{userId}")
     public ResponseEntity<UserResponse> deleteUser(@PathVariable long userId){
-        return new ResponseEntity<>(userCommandService.deleteUser(userId), HttpStatus.CREATED);
+        return new ResponseEntity<>(userCommandService.deleteUser(userId), HttpStatus.ACCEPTED);
     }
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENT')")

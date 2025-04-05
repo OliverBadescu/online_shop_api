@@ -55,7 +55,8 @@ class UserCommandServiceImplTest {
                 "+1234567890",
                 "US",
                 "123 Billing St",
-                "123 Main St"
+                "123 Main St",
+                "ADMIN"
         );
 
         when(passwordEncoder.encode("password123")).thenReturn(encodedPassword);
@@ -94,7 +95,8 @@ class UserCommandServiceImplTest {
                 "+1234567890",
                 "US",
                 "123 Billing St",
-                "123 Main St"
+                "123 Main St",
+                "ADMIN"
         );
 
         List<User> existingUsers = new ArrayList<>();

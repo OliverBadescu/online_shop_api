@@ -24,13 +24,24 @@ services:
 
   service:
     container_name: service-container
-    image: "oliver005/onlineshop-api:v6"
+    image: "oliver005/onlineshop-api:v10"
     ports:
-      - "8082:8080"
+      - "8080:8080"
     restart: always
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     depends_on:
       - mysql
+    networks:
+      - myappnetwork
+
+  client:
+    container_name: client-container
+    image: "oliver005/onlineshop-ui:v5"
+    ports:
+      - "3000:80"
+    restart: always
+    depends_on:
+      - service
     networks:
       - myappnetwork

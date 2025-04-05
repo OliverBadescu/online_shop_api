@@ -29,12 +29,22 @@ public class UserCommandServiceImpl implements UserCommandService{
 
     @Override
     public UserResponse createUser(CreateUserRequest createUserRequest) {
+
+        String roleString = createUserRequest.userRole().toUpperCase();
+        UserRole role;
+
+        try {
+            role = UserRole.valueOf(roleString);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid user role: " + roleString);
+        }
+
         User user  = User.builder()
                 .phone(createUserRequest.phone())
                 .password(passwordEncoder.encode(createUserRequest.password()))
                 .fullName(createUserRequest.fullName())
                 .email(createUserRequest.email())
-                .userRole(UserRole.CLIENT)
+                .userRole(role)
                 .billingAddress(createUserRequest.billingAddress())
                 .shippingAddress(createUserRequest.shippingAddress())
                 .country(createUserRequest.country())

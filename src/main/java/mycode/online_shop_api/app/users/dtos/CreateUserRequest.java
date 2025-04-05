@@ -10,5 +10,5 @@ public record CreateUserRequest(@NotNull String fullName,
                                 @NotNull String phone,
                                 @NotNull String country,
                                 @NotNull String billingAddress,
-                                @NotNull String shippingAddress) {
+                                @NotNull String shippingAddress, @NotNull String userRole) {
 }

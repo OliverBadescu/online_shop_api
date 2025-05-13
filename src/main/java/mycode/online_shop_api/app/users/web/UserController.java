@@ -20,7 +20,7 @@ import static mycode.online_shop_api.app.system.constants.Constants.JWT_TOKEN_HE
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/user")
+@RequestMapping("/api/v1/user")
 @CrossOrigin
 @Slf4j
 public class UserController {
@@ -31,31 +31,31 @@ public class UserController {
     private final AuthenticationManager authenticationManager;
 
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/totalUsers")
     public ResponseEntity<Integer> totalUsers(){
         return new ResponseEntity<>(userQueryService.totalUsers(), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/mostActiveUsers")
     public ResponseEntity<UserResponseList> mostActiveUsers(){
         return new ResponseEntity<>(userQueryService.getMostActiveUsers(), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENT')")
+    @PreAuthorize("hasAnyRole('ADMIN','CLIENT')")
     @GetMapping(path = "/getUserById/{userId}")
     public ResponseEntity<UserResponse> getUser(@PathVariable long userId){
         return new ResponseEntity<>(userQueryService.findUserById(userId), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add")
     public ResponseEntity<UserResponse> addUser(@RequestBody CreateUserRequest createUserRequest){
         return new ResponseEntity<>(userCommandService.createUser(createUserRequest), HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(path = "/delete/{userId}")
     public ResponseEntity<UserResponse> deleteUser(@PathVariable long userId){
         return new ResponseEntity<>(userCommandService.deleteUser(userId), HttpStatus.ACCEPTED);
@@ -68,14 +68,14 @@ public class UserController {
     }
 
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/getAllUsers")
     public ResponseEntity<UserResponseList> getAllUsers(){
         return new ResponseEntity<>(userQueryService.getAllUsers(),HttpStatus.OK);
     }
 
     @GetMapping("/getUserRole")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
+    @PreAuthorize("hasAnyRole('ADMIN','CLIENT')")
     public ResponseEntity<String> getUserRole(@RequestHeader("Authorization") String token) {
         try {
             String tokenValue = extractToken(token);

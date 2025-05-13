@@ -1,73 +1,72 @@
 package mycode.online_shop_api.app.products.web;
 
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import mycode.online_shop_api.app.orderDetails.service.OrderDetailsQueryService;
-import mycode.online_shop_api.app.products.dto.CreateProductRequest;
-import mycode.online_shop_api.app.products.dto.ProductResponse;
-import mycode.online_shop_api.app.products.dto.ProductResponseList;
-import mycode.online_shop_api.app.products.dto.UpdateProductRequest;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import mycode.online_shop_api.app.products.dto.*;
 import mycode.online_shop_api.app.products.service.ProductCommandService;
 import mycode.online_shop_api.app.products.service.ProductQueryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@AllArgsConstructor
+@RequestMapping("/api/v1/product")
 @CrossOrigin
-@RequestMapping("/product")
+@RequiredArgsConstructor
+@Slf4j
 public class ProductController {
 
-    private ProductQueryService productQueryService;
-    private ProductCommandService productCommandService;;
+    private final ProductQueryService productQueryService;
+    private final ProductCommandService productCommandService;
 
+    /* ------------------------------------------------------------------ */
+    /* Commands                                                            */
+    /* ------------------------------------------------------------------ */
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/addProduct")
-    public ResponseEntity<ProductResponse> addProduct(@RequestBody CreateProductRequest createProductRequest){
-
-
-        System.out.println();
-        return new ResponseEntity<>(productCommandService.addProduct(createProductRequest), HttpStatus.CREATED);
+    public ResponseEntity<ProductResponse> addProduct(@Valid @RequestBody CreateProductRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(productCommandService.addProduct(request));
     }
 
-
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') ")
-    @DeleteMapping(path = "/{productId}")
-    public ResponseEntity<ProductResponse> deleteProduct(@PathVariable int productId){
-        return new ResponseEntity<>(productCommandService.deleteProduct(productId), HttpStatus.ACCEPTED);
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{productId}")
+    public ResponseEntity<ProductResponse> updateProduct(@PathVariable int productId,
+                                                         @Valid @RequestBody UpdateProductRequest request) {
+        productCommandService.updateProductPut(productId, request);
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .body(productQueryService.findById(productId));
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    @PutMapping(path ="/{productId}")
-    public ResponseEntity<ProductResponse> updateProductPut(@PathVariable int productId, @Valid @RequestBody UpdateProductRequest updateProductRequest){
-
-        productCommandService.updateProductPut(productId,updateProductRequest);
-
-        ProductResponse productResponse = productQueryService.findById(productId);
-        return new ResponseEntity<>(productResponse, HttpStatus.ACCEPTED);
-
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<ProductResponse> deleteProduct(@PathVariable int productId) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .body(productCommandService.deleteProduct(productId));
     }
 
+    /* ------------------------------------------------------------------ */
+    /* Queries                                                             */
+    /* ------------------------------------------------------------------ */
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENT')")
+    @PreAuthorize("hasAnyRole('ADMIN','CLIENT')")
     @GetMapping("/getAllProducts")
-    public  ResponseEntity<ProductResponseList> getAllProducts(){
-        return new ResponseEntity<>(productQueryService.getAllProducts(), HttpStatus.OK);
+    public ResponseEntity<ProductResponseList> getAllProducts() {
+        return ResponseEntity.ok(productQueryService.getAllProducts());
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENT')")
-    @GetMapping(path = "/mostSold")
-    public ResponseEntity<ProductResponseList> getMostSoldProduct(){
-        return new ResponseEntity<>(productQueryService.getTopSellingProducts(), HttpStatus.OK);
+    @PreAuthorize("hasAnyRole('ADMIN','CLIENT')")
+    @GetMapping("/mostSold")
+    public ResponseEntity<ProductResponseList> getMostSoldProducts() {
+        return ResponseEntity.ok(productQueryService.getTopSellingProducts());
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/totalProducts")
-    public ResponseEntity<Integer> totalProducts(){
-        return new ResponseEntity<>(productQueryService.totalProducts(), HttpStatus.OK);
+    public ResponseEntity<Integer> totalProducts() {
+        return ResponseEntity.ok(productQueryService.totalProducts());
     }
 }

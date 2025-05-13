@@ -13,9 +13,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * REST controller for cart operations.
+ * <p>
+ * Security convention:
+ *   - GrantedAuthority values: ROLE_ADMIN, ROLE_CLIENT
+ *   - Therefore use hasAnyRole('ADMIN','CLIENT').
+ */
+
 @RestController
 @AllArgsConstructor
-@RequestMapping("/cart")
+@RequestMapping("/api/v1/cart")
 @CrossOrigin
 @Slf4j
 public class CartController {
@@ -23,19 +31,27 @@ public class CartController {
     private CartCommandService cartCommandService;
     private CartQueryService cartQueryService;
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENT')")
+    /* ------------------------------------------------------------------ */
+    /* Queries                                                             */
+    /* ------------------------------------------------------------------ */
+
+    @PreAuthorize("hasAnyRole('ADMIN','CLIENT')")
     @GetMapping("/getCart")
     public ResponseEntity<CartResponse> getCart() {
         return new ResponseEntity<>(cartQueryService.getCart(), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENT')")
+    /* ------------------------------------------------------------------ */
+    /* Commands                                                            */
+    /* ------------------------------------------------------------------ */
+
+    @PreAuthorize("hasAnyRole('ADMIN','CLIENT')")
     @PostMapping("/addProductToCart")
     public ResponseEntity<CartResponse> addProductToCart(@RequestBody AddProductToCartRequest addProductToCartRequest) {
         return new ResponseEntity<>(cartCommandService.addProductToCart(addProductToCartRequest), HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENT')")
+    @PreAuthorize("hasAnyRole('ADMIN','CLIENT')")
     @DeleteMapping("/deleteProductFromCart/product/{productId}")
     public ResponseEntity<CartResponse> deleteProductFromCart( @PathVariable int productId) {
         return new ResponseEntity<>(cartCommandService.deleteProductFromCart(productId), HttpStatus.ACCEPTED);

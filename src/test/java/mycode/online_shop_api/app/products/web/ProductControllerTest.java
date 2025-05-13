@@ -64,7 +64,7 @@ class ProductControllerTest {
 
         when(productCommandService.addProduct(any())).thenReturn(response);
 
-        mockMvc.perform(post("/product/addProduct")
+        mockMvc.perform(post("/api/v1/product/addProduct")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
@@ -83,7 +83,7 @@ class ProductControllerTest {
 
         when(productCommandService.deleteProduct(1)).thenReturn(response);
 
-        mockMvc.perform(delete("/product/1"))
+        mockMvc.perform(delete("/api/v1/product/1"))
                 .andExpect(status().isAccepted())
                 .andExpect(jsonPath("$.name").value("Cheap Laptop"));
     }
@@ -101,7 +101,7 @@ class ProductControllerTest {
         doNothing().when(productCommandService).updateProductPut(eq(1), any());
         when(productQueryService.findById(1)).thenReturn(response);
 
-        mockMvc.perform(put("/product/1")
+        mockMvc.perform(put("/api/v1/product/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateRequest)))
                 .andExpect(status().isAccepted())
@@ -114,7 +114,7 @@ class ProductControllerTest {
     void totalProducts() throws Exception {
         when(productQueryService.totalProducts()).thenReturn(7);
 
-        mockMvc.perform(get("/product/totalProducts"))
+        mockMvc.perform(get("/api/v1/product/totalProducts"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("7"));
     }
@@ -131,7 +131,7 @@ class ProductControllerTest {
 
         when(productQueryService.getAllProducts()).thenReturn(responseList);
 
-        mockMvc.perform(get("/product/getAllProducts"))
+        mockMvc.perform(get("/api/v1/product/getAllProducts"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.list.length()").value(3));
     }
@@ -148,7 +148,7 @@ class ProductControllerTest {
 
         when(productQueryService.getTopSellingProducts()).thenReturn(responseList);
 
-        mockMvc.perform(get("/product/mostSold"))
+        mockMvc.perform(get("/api/v1/product/mostSold"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.list.length()").value(3));
     }

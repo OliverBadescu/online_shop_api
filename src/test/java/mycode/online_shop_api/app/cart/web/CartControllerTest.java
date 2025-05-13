@@ -57,14 +57,14 @@ class CartControllerTest {
 
         when(cartQueryService.getCart()).thenReturn(mockCartResponse);
 
-        mockMvc.perform(get("/cart/getCart"))
+        mockMvc.perform(get("/api/v1/cart/getCart"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.list").isArray());
     }
 
     @Test
     @WithMockUser(roles = "CLIENT")
-    @DisplayName("POST /cart/addProductToCart - should add product to cart")
+    @DisplayName("POST /api/v1/cart/addProductToCart - should add product to cart")
     void addProductToCart() throws Exception {
         AddProductToCartRequest request = AddProductToCartRequest.builder().productId(1).quantity(2).build();
 
@@ -73,7 +73,7 @@ class CartControllerTest {
 
         when(cartCommandService.addProductToCart(any())).thenReturn(mockCartResponse);
 
-        mockMvc.perform(post("/cart/addProductToCart")
+        mockMvc.perform(post("/api/v1/cart/addProductToCart")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated());
@@ -81,20 +81,20 @@ class CartControllerTest {
 
     @Test
     @WithMockUser(roles = "CLIENT")
-    @DisplayName("DELETE /cart/deleteProductFromCart/product/{productId} - should remove product from cart")
+    @DisplayName("DELETE /api/v1/cart/deleteProductFromCart/product/{productId} - should remove product from cart")
     void deleteProductFromCart() throws Exception {
 
         CartResponse mockCartResponse = CartResponse.builder().list(new ArrayList<>()).build();
 
         when(cartCommandService.deleteProductFromCart(1)).thenReturn(mockCartResponse);
 
-        mockMvc.perform(delete("/cart/deleteProductFromCart/product/1"))
+        mockMvc.perform(delete("/api/v1/cart/deleteProductFromCart/product/1"))
                 .andExpect(status().isAccepted());
     }
 
     @Test
     @WithMockUser(roles = "CLIENT")
-    @DisplayName("PUT /cart/updateProductQuantity/products/{productId} - should update product quantity")
+    @DisplayName("PUT /api/v1/cart/updateProductQuantity/products/{productId} - should update product quantity")
     void updateProductQuantity() throws Exception {
 
         UpdateCartQuantityRequest request = new UpdateCartQuantityRequest(5);
@@ -103,7 +103,7 @@ class CartControllerTest {
         CartResponse mockCartResponse = CartResponse.builder().list(new ArrayList<>()).build();
 
 
-        mockMvc.perform(put("/cart/updateProductQuantity/products/1")
+        mockMvc.perform(put("/api/v1/cart/updateProductQuantity/products/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk());
@@ -111,12 +111,12 @@ class CartControllerTest {
 
     @Test
     @WithMockUser(roles = "CLIENT")
-    @DisplayName("DELETE /cart/emptyUserCart - should empty the cart")
+    @DisplayName("DELETE /api/v1/cart/emptyUserCart - should empty the cart")
     void emptyUserCart() throws Exception {
 
         when(cartCommandService.emptyUserCart()).thenReturn("Cart emptied successfully");
 
-        mockMvc.perform(delete("/cart/emptyUserCart"))
+        mockMvc.perform(delete("/api/v1/cart/emptyUserCart"))
                 .andExpect(status().isAccepted())
                 .andExpect(content().string("Cart emptied successfully"));
     }

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/category")
+@RequestMapping("/api/v1/category")
 @CrossOrigin
 @Slf4j
 public class CategoryController {
@@ -24,15 +24,15 @@ public class CategoryController {
     CategoryCommandService categoryCommandService;
     CategoryQueryService categoryQueryService;
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/addCategory")
     public ResponseEntity<CategoryResponse> addCategory(@RequestBody CreateCategoryRequest createCategoryRequest){
 
         return new ResponseEntity<>(categoryCommandService.addCategory(createCategoryRequest), HttpStatus.CREATED);
-        
+
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(path = "/deleteCategory/{categoryId}")
     public ResponseEntity<CategoryResponse> deleteCategory(@PathVariable int categoryId){
 
@@ -40,19 +40,19 @@ public class CategoryController {
 
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(path = "/updateCategory/{categoryId}")
     public ResponseEntity<CategoryResponse> updateCategory(@PathVariable int categoryId, @RequestBody UpdateCategoryRequest updateCategoryRequest){
         return new ResponseEntity<>(categoryCommandService.updateCategory(categoryId, updateCategoryRequest), HttpStatus.ACCEPTED);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENT')")
+    @PreAuthorize("hasAnyRole('ADMIN','CLIENT')")
     @GetMapping("/getAll")
     public ResponseEntity<CategoryResponseList> getAll(){
         return new ResponseEntity<>(categoryQueryService.getAllCategories(), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/addSubcategory/{parentId}")
     public ResponseEntity<CategoryResponse> addSubcategory(
             @PathVariable int parentId,

@@ -1,15 +1,13 @@
 package mycode.online_shop_api.app.orders.web;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mycode.online_shop_api.app.orders.dtos.CreateOrderRequest;
-import mycode.online_shop_api.app.orders.dtos.OrderResponse;
 import mycode.online_shop_api.app.orders.dtos.CreateOrderUpdateRequest;
+import mycode.online_shop_api.app.orders.dtos.OrderResponse;
 import mycode.online_shop_api.app.orders.dtos.OrderResponseList;
-import mycode.online_shop_api.app.orders.repository.OrderRepository;
 import mycode.online_shop_api.app.orders.service.OrderCommandService;
 import mycode.online_shop_api.app.orders.service.OrderQueryService;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,78 +16,90 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@AllArgsConstructor
-@RequestMapping("/order")
+@RequestMapping("/api/v1/order")
 @CrossOrigin
 @Slf4j
+@RequiredArgsConstructor
 public class OrderController {
 
-    private OrderCommandService orderCommandService;
-    private OrderQueryService orderQueryService;
+    private final OrderCommandService orderCommandService;
+    private final OrderQueryService orderQueryService;
 
+    /* ------------------------------------------------------------------ */
+    /* Commands                                                           */
+    /* ------------------------------------------------------------------ */
 
-
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENT')")
+    @PreAuthorize("hasAnyRole('ADMIN','CLIENT')")
     @PostMapping("/sendOrder")
-    public ResponseEntity<OrderResponse> createOrder(@RequestBody CreateOrderRequest createOrderRequest){
-
-        return new ResponseEntity<>(orderCommandService.addOrder( createOrderRequest), HttpStatus.CREATED);
-
+    public ResponseEntity<OrderResponse> createOrder(@RequestBody CreateOrderRequest createOrderRequest) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(orderCommandService.addOrder(createOrderRequest));
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENT')")
+    @PreAuthorize("hasAnyRole('ADMIN','CLIENT')")
     @PutMapping("/cancelOrder/{orderId}")
-    public ResponseEntity<OrderResponse> cancelOrder(@PathVariable int orderId){
-        return new ResponseEntity<>(orderCommandService.cancelOrder(orderId), HttpStatus.ACCEPTED);
+    public ResponseEntity<OrderResponse> cancelOrder(@PathVariable int orderId) {
+        return ResponseEntity
+                .status(HttpStatus.ACCEPTED)
+                .body(orderCommandService.cancelOrder(orderId));
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    @DeleteMapping(path = "/deleteOrder/{orderId}")
-    public ResponseEntity<OrderResponse> deleteOrder(@PathVariable int orderId){
-
-        return new ResponseEntity<>(orderCommandService.deleteOrder(orderId), HttpStatus.ACCEPTED);
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/deleteOrder/{orderId}")
+    public ResponseEntity<OrderResponse> deleteOrder(@PathVariable int orderId) {
+        return ResponseEntity
+                .status(HttpStatus.ACCEPTED)
+                .body(orderCommandService.deleteOrder(orderId));
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    @PutMapping(path = "/updateOrder/{orderId}")
-    public ResponseEntity<OrderResponse> updateOrder(@PathVariable int orderId, @RequestBody CreateOrderUpdateRequest createOrderUpdateRequest){
-        return new ResponseEntity<>(orderCommandService.updateOrder(orderId, createOrderUpdateRequest), HttpStatus.ACCEPTED);
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/updateOrder/{orderId}")
+    public ResponseEntity<OrderResponse> updateOrder(
+            @PathVariable int orderId,
+            @RequestBody CreateOrderUpdateRequest createOrderUpdateRequest) {
+        return ResponseEntity
+                .status(HttpStatus.ACCEPTED)
+                .body(orderCommandService.updateOrder(orderId, createOrderUpdateRequest));
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') ")
+    /* ------------------------------------------------------------------ */
+    /* Queries                                                            */
+    /* ------------------------------------------------------------------ */
+
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/getRecentOrders")
-    public ResponseEntity<OrderResponseList> getRecentOrders(){
-        return new ResponseEntity<>(orderQueryService.getRecentOrders(), HttpStatus.OK);
+    public ResponseEntity<OrderResponseList> getRecentOrders() {
+        return ResponseEntity.ok(orderQueryService.getRecentOrders());
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_CLIENT')")
-    @GetMapping("getCustomerOrders")
-    public ResponseEntity<OrderResponseList> getCustomerOrders(){
-        return new ResponseEntity<>(orderQueryService.customerOrders(), HttpStatus.OK);
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/getCustomerOrders")
+    public ResponseEntity<OrderResponseList> getCustomerOrders() {
+        return ResponseEntity.ok(orderQueryService.customerOrders());
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/totalOrders")
-    public ResponseEntity<Integer> totalOrders(){
-        return new ResponseEntity<>(orderQueryService.totalOrders(), HttpStatus.OK);
+    public ResponseEntity<Integer> totalOrders() {
+        return ResponseEntity.ok(orderQueryService.totalOrders());
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/totalRevenue")
-    public ResponseEntity<Double> totalRevenue(){
-
-        return new ResponseEntity<>(orderQueryService.totalRevenue(), HttpStatus.OK);
+    public ResponseEntity<Double> totalRevenue() {
+        return ResponseEntity.ok(orderQueryService.totalRevenue());
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') ")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/monthly")
     public ResponseEntity<Map<String, Double>> getMonthlyRevenue() {
-        return new ResponseEntity<>(orderQueryService.getMonthlyRevenue(), HttpStatus.OK);
+        return ResponseEntity.ok(orderQueryService.getMonthlyRevenue());
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/getAllOrders")
-    public ResponseEntity<OrderResponseList> getAllOrders(){
-        return new ResponseEntity<>(orderQueryService.getAllOrders(), HttpStatus.OK);
+    public ResponseEntity<OrderResponseList> getAllOrders() {
+        return ResponseEntity.ok(orderQueryService.getAllOrders());
     }
 }

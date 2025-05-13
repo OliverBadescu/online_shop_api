@@ -60,7 +60,7 @@ class OrderControllerTest {
 
         when(orderCommandService.addOrder(any())).thenReturn(response);
 
-        mockMvc.perform(post("/order/sendOrder")
+        mockMvc.perform(post("/api/v1/order/sendOrder")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
@@ -75,7 +75,7 @@ class OrderControllerTest {
 
         when(orderCommandService.cancelOrder(1)).thenReturn(response);
 
-        mockMvc.perform(put("/order/cancelOrder/1"))
+        mockMvc.perform(put("/api/v1/order/cancelOrder/1"))
                 .andExpect(status().isAccepted())
                 .andExpect(jsonPath("$.orderStatus").value("Cancelled"));
     }
@@ -88,7 +88,7 @@ class OrderControllerTest {
 
         when(orderCommandService.deleteOrder(1)).thenReturn(response);
 
-        mockMvc.perform(delete("/order/deleteOrder/1"))
+        mockMvc.perform(delete("/api/v1/order/deleteOrder/1"))
                 .andExpect(status().isAccepted())
                 .andExpect(jsonPath("$.orderStatus").value("Deleted"));
     }
@@ -102,7 +102,7 @@ class OrderControllerTest {
 
         when(orderCommandService.updateOrder(anyInt(), any())).thenReturn(response);
 
-        mockMvc.perform(put("/order/updateOrder/1")
+        mockMvc.perform(put("/api/v1/order/updateOrder/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isAccepted())
@@ -115,7 +115,7 @@ class OrderControllerTest {
     void totalOrders() throws Exception {
         when(orderQueryService.totalOrders()).thenReturn(10);
 
-        mockMvc.perform(get("/order/totalOrders"))
+        mockMvc.perform(get("/api/v1/order/totalOrders"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("10"));
     }
@@ -126,7 +126,7 @@ class OrderControllerTest {
     void getAllOrders() throws Exception {
         when(orderQueryService.getAllOrders()).thenReturn(new OrderResponseList(List.of()));
 
-        mockMvc.perform(get("/order/getAllOrders"))
+        mockMvc.perform(get("/api/v1/order/getAllOrders"))
                 .andExpect(status().isOk());
     }
 
@@ -136,7 +136,7 @@ class OrderControllerTest {
     void totalRevenue() throws Exception {
         when(orderQueryService.totalRevenue()).thenReturn(5000.0);
 
-        mockMvc.perform(get("/order/totalRevenue"))
+        mockMvc.perform(get("/api/v1/order/totalRevenue"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("5000.0"));
     }
@@ -149,7 +149,7 @@ class OrderControllerTest {
     void getMonthlyRevenue() throws Exception {
         when(orderQueryService.getMonthlyRevenue()).thenReturn(Map.of("January", 1000.0));
 
-        mockMvc.perform(get("/order/monthly"))
+        mockMvc.perform(get("/api/v1/order/monthly"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.January").value(1000.0));
     }

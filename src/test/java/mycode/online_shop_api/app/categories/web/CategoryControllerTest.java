@@ -47,14 +47,14 @@ class CategoryControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    @DisplayName("POST /category/addCategory - should return 201 CREATED")
+    @DisplayName("POST /api/v1/category/addCategory - should return 201 CREATED")
     void addCategory() throws Exception {
         CreateCategoryRequest request = new CreateCategoryRequest("Electronics");
         CategoryResponse response = new CategoryResponse(1, "Electronics", null);
 
         when(categoryCommandService.addCategory(any())).thenReturn(response);
 
-        mockMvc.perform(post("/category/addCategory")
+        mockMvc.perform(post("/api/v1/category/addCategory")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
@@ -69,7 +69,7 @@ class CategoryControllerTest {
 
         when(categoryCommandService.deleteCategory(1)).thenReturn(response);
 
-        mockMvc.perform(delete("/category/deleteCategory/1"))
+        mockMvc.perform(delete("/api/v1/category/deleteCategory/1"))
                 .andExpect(status().isAccepted())
                 .andExpect(jsonPath("$.name").value("Electronics"));
     }
@@ -83,7 +83,7 @@ class CategoryControllerTest {
 
         when(categoryCommandService.updateCategory(1, request)).thenReturn(response);
 
-        mockMvc.perform(put("/category/updateCategory/1")
+        mockMvc.perform(put("/api/v1/category/updateCategory/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isAccepted())
@@ -98,7 +98,7 @@ class CategoryControllerTest {
 
         when(categoryQueryService.getAllCategories()).thenReturn(responseList);
 
-        mockMvc.perform(get("/category/getAll"))
+        mockMvc.perform(get("/api/v1/category/getAll"))
                 .andExpect(status().isOk());
     }
 
@@ -111,7 +111,7 @@ class CategoryControllerTest {
 
         when(categoryCommandService.addSubcategory(1, request)).thenReturn(response);
 
-        mockMvc.perform(post("/category/addSubcategory/1")
+        mockMvc.perform(post("/api/v1/category/addSubcategory/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())

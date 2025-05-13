@@ -73,7 +73,7 @@ public class OrderController {
         return ResponseEntity.ok(orderQueryService.getRecentOrders());
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','CLIENT')")
     @GetMapping("/getCustomerOrders")
     public ResponseEntity<OrderResponseList> getCustomerOrders() {
         return ResponseEntity.ok(orderQueryService.customerOrders());

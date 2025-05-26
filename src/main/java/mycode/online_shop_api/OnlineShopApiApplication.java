@@ -27,7 +27,7 @@ public class OnlineShopApiApplication {
         };
     }
 
-    
+
     @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();

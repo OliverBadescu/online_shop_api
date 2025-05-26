@@ -24,7 +24,7 @@ services:
 
   service:
     container_name: service-container
-    image: "oliver005/online_shop_api:26.04.2025.19.19.45"
+    image: "oliver005/online_shop_api:13.05.2025.18.18.20-prod"
     ports:
       - "8080:8080"
     restart: always
@@ -37,9 +37,9 @@ services:
 
   client:
     container_name: client-container
-    image: "oliver005/online-shop-react:27.04.2025.18.30.27"
+    image: "oliver005/online-shop-react:17.05.2025.17.49.32-prod"
     ports:
-      - "80:80"
+      - "3000:80"
     restart: always
     depends_on:
       - service

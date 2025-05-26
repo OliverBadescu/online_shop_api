@@ -62,6 +62,5 @@ jobs:
               echo "API_TAG=$NEW_TAG" | sudo tee -a "$ENV_FILE"
             fi
 
-            echo "🚢  Pull & restart backend"
-            sudo docker compose -f /home/ubuntu/docker-compose.yaml pull service
+            echo "🚢  Pull & restart backend"           sudo docker compose -f /home/ubuntu/docker-compose.yaml pull service
             sudo docker compose -f /home/ubuntu/docker-compose.yaml up -d --no-deps service
